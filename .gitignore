@@ -1,0 +1,9 @@
+# Miljøvariabler – må aldrig committes
+.env
+.env.*
+!.env.example
+
+# Afhængigheder og build
+node_modules/
+.vercel/
+.DS_Store

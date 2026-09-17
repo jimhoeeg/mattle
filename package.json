@@ -1,0 +1,6 @@
+{
+  "name": "mattle-loesningsbygger",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=18" }
+}

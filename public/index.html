@@ -1,0 +1,2192 @@
+<!doctype html><html lang="da"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<title>Løsningsbygger – Mattle ApS</title>
+<meta name="description" content="Find den rette klimaløsning til dit areal. Svar på få spørgsmål og få en begrundet anbefaling på tværs af bærelag, regnvandshåndtering, bytræer, grønne tage og sportsarealer fra Mattle ApS.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Mattle ApS">
+<meta property="og:title" content="Løsningsbygger – find den rette klimaløsning til dit areal">
+<meta property="og:description" content="Få en begrundet anbefaling på regnvand, bytræer og bærelag, med links til Mattles løsninger og viden.">
+<meta name="twitter:card" content="summary">
+</head><body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wdth,wght@0,75..100,300..800;1,75..100,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* Mattle-palet: bladgrøn fra logo, hvid flade, antracit tekst, blå accent fra logo-understregning */
+    --paper:#FFFFFF;
+    --panel:#FFFFFF;
+    --ink:#333333;
+    --ink-soft:#6B6B6B;
+    --moss:#86BC3F;          /* Mattle-grøn (flader, knapper, ikoner) */
+    --moss-deep:#4F7F1E;     /* mørk grøn til tekst på hvid (AA-kontrast) */
+    --moss-pale:#F2F7EA;
+    --water:#2A8BC4;         /* blå accent */
+    --water-pale:#EAF4FA;
+    --clay:#8A6A4A;          /* jord/rødder i ikoner */
+    --clay-pale:#F4EFE9;
+    --line:#E2E2E2;
+    --overlay:rgba(38,38,38,.74);
+    --focus:#2A8BC4;
+    --hero-img:none;         /* sæt til url("data:...") når Mattles foto er modtaget */
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#1C1E1B; --panel:#242722; --ink:#ECECEC; --ink-soft:#A9ADA5;
+      --moss:#95C952; --moss-deep:#A8D46D; --moss-pale:#2A3322;
+      --water:#5DB2E3; --water-pale:#1E2D36; --clay:#C39C76; --clay-pale:#342B22;
+      --line:#3A3D37; --overlay:rgba(20,20,20,.78);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#1C1E1B; --panel:#242722; --ink:#ECECEC; --ink-soft:#A9ADA5;
+    --moss:#95C952; --moss-deep:#A8D46D; --moss-pale:#2A3322;
+    --water:#5DB2E3; --water-pale:#1E2D36; --clay:#C39C76; --clay-pale:#342B22;
+    --line:#3A3D37; --overlay:rgba(20,20,20,.78);
+  }
+  *{box-sizing:border-box;}
+  html,body{ overflow-x:hidden; }
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:"Open Sans", "Segoe UI", Arial, sans-serif;
+    font-size:16px; line-height:1.7; padding-inline:20px;
+  }
+  /* Mattles overskriftsstil: kondenseret, fed, versaler */
+  h1,h2,h3{
+    font-family:"Open Sans", "Arial Narrow", Arial, sans-serif; font-stretch:75%;
+    font-weight:700; text-transform:uppercase; letter-spacing:.02em; line-height:1.15;
+    margin:0 0 .45em; text-wrap:balance; color:var(--ink);
+  }
+  .mono{ font-variant-numeric:tabular-nums; }
+  a{ color:var(--moss-deep); }
+  button{ font-family:inherit; }
+  ::selection{ background:var(--moss-pale); }
+  :focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+
+  .wrap{ max-width:1100px; margin:0 auto; padding-bottom:64px; }
+  .step > *:not(.hero-banner){ max-width:820px; }
+
+  /* Topbar i stil med mattle.dk */
+  .topbar{
+    position:sticky; top:env(safe-area-inset-top,0px); z-index:10;
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+    padding:10px 0; background:var(--paper); border-bottom:1px solid var(--line);
+  }
+  .brand{ display:flex; align-items:flex-end; gap:6px; text-decoration:none; padding-bottom:4px; border-bottom:2px solid var(--water); }
+  .brand .mark{ width:34px; height:30px; flex-shrink:0; }
+  .brand .name{ font-weight:700; font-size:1.6rem; line-height:1; color:var(--moss); letter-spacing:-.01em; font-stretch:90%; }
+  .legend{ display:flex; gap:4px; align-items:center; }
+  .legend .dot{ width:8px; height:8px; border-radius:50%; background:var(--line); }
+  .legend .dot.done{ background:var(--moss); }
+  .legend .dot.now{ background:var(--moss); box-shadow:0 0 0 3px var(--moss-pale); }
+  .legend .lbl{ font-size:.82rem; font-weight:600; text-transform:uppercase; letter-spacing:.03em; color:var(--ink-soft); margin-left:10px; }
+
+  /* Steps */
+  .step{ display:none; padding-top:34px; }
+  .step.active{ display:block; }
+  .eyebrow{ font-size:.9rem; font-weight:600; color:var(--moss-deep); margin-bottom:6px; }
+  .step h2{ font-size:clamp(1.7rem,3.4vw,2.3rem); max-width:24ch; }
+  .lede{ color:var(--ink-soft); max-width:62ch; margin:6px 0 28px; font-size:1.02rem; }
+
+  /* Hero: fuldbredde foto + mørk tekstboks, som forsiden på mattle.dk */
+  #step-start{ padding-top:0; }
+  .hero-banner{
+    position:relative; margin-inline:calc(50% - 50vw); min-height:clamp(340px,52vw,520px);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0;
+    padding:48px 20px; overflow:hidden;
+    background-color:#3C4A33; background-image:var(--hero-img); background-size:cover; background-position:center;
+  }
+  .hero-art{ position:absolute; inset:0; width:100%; height:100%; }
+  .hero-box{ position:relative; background:var(--overlay); padding:22px clamp(18px,4vw,48px); max-width:1100px; width:100%; text-align:center; }
+  .hero-box h1{ color:#fff; margin:0; font-size:clamp(1.7rem,4.2vw,3.2rem); letter-spacing:.04em; line-height:1.18; }
+  .hero-sub{ position:relative; background:var(--overlay); color:#fff; padding:10px 26px; text-align:center;
+    font-size:clamp(.9rem,1.8vw,1.25rem); letter-spacing:.18em; font-weight:600; }
+  .hero-intro{ padding-top:40px; }
+  .hero-intro .lede{ color:var(--ink); font-size:1.08rem; }
+  .hero-facts{ margin-top:30px; display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+  @media (max-width:700px){ .hero-facts{ grid-template-columns:1fr; gap:10px; } }
+  .hero-fact{ display:grid; grid-template-columns:38px 1fr; gap:10px; align-items:start; font-size:.95rem; color:var(--ink); }
+  .hero-fact b{ display:flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:50%; background:var(--moss); color:#fff; font-size:.95rem; }
+
+  .btn{
+    appearance:none; border:2px solid var(--moss); cursor:pointer; border-radius:3px;
+    font-family:inherit; font-size:.95rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em; font-stretch:85%;
+    padding:12px 26px; background:var(--moss); color:#fff; text-decoration:none; display:inline-block;
+    transition:background .15s, color .15s, border-color .15s;
+  }
+  .btn:hover{ background:var(--moss-deep); border-color:var(--moss-deep); }
+  .btn-outline{ background:transparent; color:var(--moss-deep); }
+  .btn-outline:hover{ background:var(--moss-pale); color:var(--moss-deep); }
+  .btn-quiet{ border-color:var(--line); color:var(--ink-soft); background:transparent; }
+  .btn-quiet:hover{ border-color:var(--ink-soft); background:var(--moss-pale); color:var(--ink); }
+  .btn:disabled{ opacity:.4; cursor:not-allowed; }
+  .cta-row{ display:flex; gap:12px; flex-wrap:wrap; margin-top:6px; }
+
+  /* Felter */
+  .field-block{ margin-bottom:30px; }
+  .q{ font-weight:700; font-size:1.02rem; display:block; margin-bottom:10px; color:var(--ink); }
+  .field-hint{ font-size:.88rem; color:var(--ink-soft); margin:-5px 0 12px; }
+  .why{ font-size:.9rem; color:var(--ink); background:var(--moss-pale); border-left:4px solid var(--moss); padding:10px 14px; margin:0 0 14px; max-width:64ch; }
+  .why b{ color:var(--ink); }
+
+  .choice-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+  .choice-grid.cols-2{ grid-template-columns:repeat(2,1fr); }
+  @media (max-width:640px){ .choice-grid{ grid-template-columns:1fr 1fr; } }
+  @media (max-width:420px){ .choice-grid, .choice-grid.cols-2{ grid-template-columns:1fr; } }
+  .choice{ position:relative; border:1px solid var(--line); border-radius:3px; padding:14px 14px 15px; cursor:pointer; background:var(--panel); transition:border-color .15s, background .15s; }
+  .choice:hover{ border-color:var(--moss); }
+  .choice input{ position:absolute; opacity:0; inset:0; margin:0; cursor:pointer; }
+  .choice-icon{ width:34px; height:34px; margin-bottom:9px; }
+  .choice-icon svg{ width:100%; height:100%; display:block; }
+  .choice .t{ font-weight:700; display:block; margin-bottom:2px; font-size:.95rem; line-height:1.35; }
+  .choice .d{ color:var(--ink-soft); font-size:.84rem; line-height:1.45; display:block; }
+  .choice.checked{ border-color:var(--moss); background:var(--moss-pale); box-shadow:inset 0 0 0 1px var(--moss); }
+  .choice.checked .t::before{ content:"✓ "; color:var(--moss-deep); }
+
+  .area-row{ display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+  input[type="range"]{ flex:1; min-width:160px; accent-color:var(--moss); }
+  input[type="number"], input[type="text"], input[type="email"], select{
+    font-family:inherit; border:1px solid #CFCFCF; border-radius:3px; background:var(--panel); color:var(--ink);
+    padding:9px 10px; font-size:.95rem; width:100px;
+  }
+  input[type="text"], input[type="email"], select{ width:100%; }
+  .area-value{ font-weight:700; font-size:1.15rem; min-width:90px; color:var(--ink); font-variant-numeric:tabular-nums; }
+
+  .dive{ border:1px solid var(--line); border-top:3px solid var(--moss); background:var(--panel); padding:20px 22px; margin-bottom:22px; }
+  .dive-label{ font-size:1rem; font-weight:700; font-stretch:75%; text-transform:uppercase; letter-spacing:.03em; color:var(--moss-deep); margin-bottom:10px; }
+
+  .conditional{ display:none; }
+  .conditional.shown{ display:block; }
+
+  /* Resultater */
+  .pillar-heading{ display:flex; align-items:center; gap:10px; margin:34px 0 12px; padding-top:22px; border-top:1px solid var(--line); }
+  .pillar-heading:first-of-type{ margin-top:0; padding-top:0; border-top:none; }
+  .pillar-heading .p-icon{ width:28px; height:28px; flex-shrink:0; }
+  .pillar-heading .p-icon svg{ width:100%; height:100%; display:block; }
+  .pillar-heading h3{ font-size:1.2rem; margin:0; }
+
+  .comp-card{ border:1px solid var(--line); border-radius:3px; background:var(--panel); margin-bottom:12px; }
+  .comp-card.included{ border-left:4px solid var(--moss); }
+  .comp-head{ display:grid; grid-template-columns:auto 1fr auto; gap:16px; align-items:start; padding:16px 18px; }
+  @media (max-width:560px){ .comp-head{ grid-template-columns:auto 1fr; } .comp-price{ grid-column:2; text-align:left !important; margin-top:6px; } }
+  .comp-check{ width:22px; height:22px; border:1.5px solid #BDBDBD; border-radius:3px; display:flex; align-items:center; justify-content:center; margin-top:2px; cursor:pointer; flex-shrink:0; }
+  .comp-check svg{ opacity:0; width:12px; height:12px; }
+  .comp-card.included .comp-check{ background:var(--moss); border-color:var(--moss); }
+  .comp-card.included .comp-check svg{ opacity:1; }
+  .comp-card.required .comp-check{ background:var(--ink-soft); border-color:var(--ink-soft); cursor:default; }
+  .comp-main h4{ font-size:1.05rem; font-weight:700; margin:0 0 4px; line-height:1.35; }
+  .badge{ display:inline-block; font-size:.74rem; font-weight:700; padding:2px 9px; border-radius:2px; background:var(--moss); color:#fff; margin-bottom:7px; }
+  .badge.required{ background:var(--line); color:var(--ink); }
+  .fact{ font-size:.9rem; color:var(--ink-soft); margin:4px 0; max-width:60ch; line-height:1.6; }
+  .reason{ font-size:.9rem; color:var(--ink); margin:12px 0 0; max-width:60ch; background:var(--moss-pale); padding:10px 13px; border-left:4px solid var(--moss); }
+  .hint{ font-size:.86rem; color:var(--ink-soft); margin-top:8px; max-width:60ch; }
+  .comp-price{ text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; }
+  .comp-price .from{ font-size:.74rem; color:var(--ink-soft); display:block; }
+  .comp-price .amt{ font-weight:700; color:var(--ink); font-size:1.02rem; }
+  .comp-price .unit{ font-size:.82rem; color:var(--ink-soft); }
+  .comp-price .sub{ font-size:.84rem; color:var(--ink-soft); margin-top:3px; }
+
+  .comp-body{ padding:0 18px 18px 56px; }
+  @media (max-width:560px){ .comp-body{ padding:0 18px 18px 18px; } }
+  .pill-row{ display:flex; gap:8px; flex-wrap:wrap; margin:4px 0 6px; }
+  .pill{ border:1px solid #CFCFCF; border-radius:3px; padding:9px 13px; font-size:.86rem; cursor:pointer; background:var(--panel); font-weight:600; position:relative; }
+  .pill.active{ border-color:var(--moss); background:var(--moss-pale); color:var(--moss-deep); box-shadow:inset 0 0 0 1px var(--moss); }
+  .pill .pp{ font-weight:400; color:var(--ink-soft); margin-left:6px; font-size:.8rem; }
+  .pill.active .pp{ color:var(--moss-deep); }
+  .pill.rec::after{ content:"Anbefalet"; position:absolute; top:-10px; right:6px; font-size:.66rem; background:var(--water); color:#fff; padding:1px 7px; border-radius:2px; font-weight:700; }
+  .qty-line{ display:flex; align-items:center; gap:8px; font-size:.88rem; margin-top:10px; color:var(--ink-soft); }
+  .qty-line input{ width:70px; padding:5px 7px; font-size:.88rem; }
+
+  /* Pakke */
+  .package-table{ width:100%; border-collapse:collapse; margin:18px 0 6px; font-size:.94rem; }
+  .package-table th{ text-align:left; font-weight:700; font-size:.95rem; font-stretch:75%; text-transform:uppercase; letter-spacing:.03em; color:var(--ink); border-bottom:2px solid var(--moss); padding:0 6px 8px 0; }
+  .package-table td{ padding:12px 6px 12px 0; border-bottom:1px solid var(--line); vertical-align:top; }
+  .package-table td:last-child, .package-table th:last-child{ text-align:right; padding-right:0; font-variant-numeric:tabular-nums; }
+  .package-table .variant{ display:block; font-size:.84rem; color:var(--ink-soft); }
+  .package-table .comp-name{ font-weight:600; }
+  .total-block{ display:flex; justify-content:space-between; align-items:flex-end; gap:12px; padding:18px 20px; margin-top:10px; background:var(--overlay); color:#fff; }
+  .total-block .label{ font-size:.95rem; font-weight:600; }
+  .total-block .value{ font-weight:700; font-size:1.7rem; font-variant-numeric:tabular-nums; }
+  .disclaimer{ font-size:.84rem; color:var(--ink-soft); margin-top:14px; max-width:66ch; }
+  .package-actions{ display:flex; gap:14px; margin-top:28px; flex-wrap:wrap; }
+
+  /* Rapport */
+  .report-gate{ display:grid; grid-template-columns:1fr 1fr; gap:36px; align-items:start; }
+  @media (max-width:660px){ .report-gate{ grid-template-columns:1fr; } }
+  .report-benefits{ border-top:1px solid var(--line); }
+  .report-benefit{ display:grid; grid-template-columns:22px 1fr; gap:10px; font-size:.94rem; padding:12px 0; border-bottom:1px solid var(--line); }
+  .report-benefit .ic{ color:transparent; width:14px; height:14px; margin-top:6px; border-radius:50%; background:var(--moss); overflow:hidden; font-size:0; }
+  .form-field{ margin-bottom:13px; }
+  .form-field label{ display:block; font-size:.86rem; margin-bottom:5px; color:var(--ink); font-weight:600; }
+  .privacy-note{ font-size:.82rem; color:var(--ink-soft); margin:4px 0 16px; }
+
+  .dashboard{ display:none; }
+  .dashboard.shown{ display:block; }
+  .metric-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:22px 0 24px; }
+  @media (max-width:600px){ .metric-grid{ grid-template-columns:1fr 1fr; } }
+  .metric{ border:1px solid var(--line); border-top:3px solid var(--moss); padding:16px 17px; background:var(--panel); }
+  .metric .v{ font-weight:700; font-size:2rem; font-stretch:75%; line-height:1.1; color:var(--moss-deep); display:block; }
+  .metric .u{ font-size:.82rem; color:var(--ink-soft); font-weight:600; }
+  .metric .l{ font-size:.86rem; color:var(--ink-soft); margin-top:6px; line-height:1.5; }
+
+  .more-links{ font-size:.86rem; margin:8px 0 0; color:var(--ink-soft); max-width:60ch; }
+  .more-links a{ font-weight:600; }
+  .term{ border-bottom:1px dotted currentColor; cursor:help; position:relative; }
+  .term:hover::after, .term:focus::after{
+    content:attr(data-tip); position:absolute; left:0; top:calc(100% + 6px); z-index:30;
+    width:max-content; max-width:260px; background:#333; color:#fff; padding:8px 10px; border-radius:3px;
+    font-size:.8rem; font-weight:400; line-height:1.45; text-transform:none; letter-spacing:0; font-stretch:100%; white-space:normal;
+  }
+  .choice:focus-within{ outline:2px solid var(--focus); outline-offset:2px; }
+  .choice-sub{ margin-top:34px; }
+  .field-error{ outline:2px solid #C0392B; outline-offset:8px; }
+  .step-error{ color:#B03A2E; font-weight:600; font-size:.92rem; margin:0; flex:1; text-align:center; }
+  .step-error:empty{ display:none; }
+  .table-scroll{ overflow-x:auto; }
+  .share-row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:18px; }
+  .share-row input{ flex:1; min-width:220px; font-size:.85rem; }
+  .share-status{ font-size:.86rem; color:var(--moss-deep); font-weight:600; }
+  .print-head{ display:none; }
+  .pill[tabindex]:focus-visible, .comp-check[tabindex]:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+  @media (max-width:640px){
+    .footer-nav{ position:sticky; bottom:0; z-index:9; background:var(--paper); border-top:1px solid var(--line); padding:12px 0 calc(12px + env(safe-area-inset-bottom,0px)); flex-wrap:wrap; }
+    .footer-nav .step-error{ order:-1; flex-basis:100%; }
+    .btn{ padding:12px 18px; }
+  }
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; scroll-behavior:auto !important; } }
+  /* Vidensfelter */
+  .deep{ margin:12px 0 4px; max-width:64ch; border:1px solid var(--line); border-left:4px solid var(--water); background:var(--panel); }
+  .deep summary{ cursor:pointer; padding:9px 13px; font-weight:700; font-size:.9rem; color:var(--ink); list-style:none; }
+  .deep summary::-webkit-details-marker{ display:none; }
+  .deep summary::before{ content:"+"; display:inline-block; width:1.1em; color:var(--water); font-weight:800; }
+  .deep[open] summary::before{ content:"–"; }
+  .deep-body{ padding:0 14px 10px 30px; }
+  .deep-body h5{ margin:10px 0 2px; font-size:.86rem; color:var(--ink); }
+  .deep-body p{ margin:0 0 6px; font-size:.88rem; color:var(--ink-soft); line-height:1.6; }
+  /* Placering */
+  .addr-wrap{ position:relative; max-width:560px; margin-bottom:12px; }
+  .addr-wrap input{ width:100%; font-size:1rem; padding:12px 14px; }
+  .addr-results{ list-style:none; margin:0; padding:0; position:absolute; left:0; right:0; top:100%; z-index:500; background:var(--panel); border:1px solid var(--line); box-shadow:0 6px 18px rgba(0,0,0,.12); }
+  .addr-results:empty{ display:none; }
+  .addr-opt{ display:block; width:100%; text-align:left; background:none; border:0; border-bottom:1px solid var(--line); padding:10px 14px; font-size:.95rem; color:var(--ink); cursor:pointer; }
+  .addr-opt:hover, .addr-opt:focus{ background:var(--moss-pale); }
+  .addr-empty{ padding:10px 14px; font-size:.9rem; color:var(--ink-soft); }
+  #map{ height:clamp(320px,55vh,520px); border:1px solid var(--line); background:#DADCD6; max-width:none !important; }
+  #map.drawing{ cursor:crosshair; }
+  .step > #map-ready, .step > #photos-wrap{ max-width:none; }
+  .draw-bar{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin:12px 0 4px; }
+  .draw-status{ font-size:.92rem; color:var(--ink); margin:6px 0 0; font-weight:600; }
+  .photo-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:12px; }
+  @media (max-width:640px){ .photo-grid{ grid-template-columns:1fr; } }
+  .photo{ margin:0; }
+  .photo-frame{ aspect-ratio:64/44; background:#E8E9E4; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+  .photo-frame canvas{ width:100%; height:100%; object-fit:cover; display:block; }
+  .photo-msg{ font-size:.86rem; color:var(--ink-soft); padding:10px; text-align:center; }
+  .photo figcaption{ font-size:.86rem; font-weight:600; margin-top:5px; }
+  .map-fallback{ border:1px solid var(--line); border-top:3px solid var(--moss); padding:18px 20px; max-width:640px; }
+  /* Fagtips */
+  .tips{ display:grid; gap:10px; margin:18px 0 28px; }
+  .tip{ display:grid; grid-template-columns:40px 1fr; gap:12px; border:1px solid var(--line); border-left:4px solid var(--moss); padding:14px 16px; background:var(--panel); }
+  .tip-n{ width:32px; height:32px; border-radius:50%; background:var(--moss); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; }
+  .tip h4{ margin:0 0 4px; font-size:1rem; line-height:1.35; }
+  .tip p{ margin:0; font-size:.9rem; color:var(--ink-soft); line-height:1.6; }
+  .row-toggle{ background:none; border:0; padding:0; text-align:left; cursor:pointer; color:inherit; font:inherit; }
+  .row-toggle .comp-name::after{ content:" ▾"; color:var(--moss-deep); font-size:.8em; }
+  .row-toggle[aria-expanded="true"] .comp-name::after{ content:" ▴"; }
+  .drv-row td{ background:var(--moss-pale); font-size:.86rem; padding:10px 12px !important; text-align:left !important; }
+  .drv-row ul{ margin:4px 0 0; padding-left:18px; }
+  .drv-h{ font-weight:700; }
+  .span-note{ font-size:.88rem; color:var(--ink); margin:10px 0 0; max-width:66ch; }
+  /* Rapportdokument */
+  .consent{ display:flex; gap:8px; align-items:flex-start; font-size:.86rem; margin:6px 0; }
+  .consent input{ margin-top:4px; }
+  .hp{ position:absolute; left:-9999px; }
+  .lead-status{ color:#B03A2E; font-weight:600; font-size:.88rem; }
+  .report-doc{ border:1px solid var(--line); padding:28px; margin-top:22px; background:#fff; color:#333; max-width:820px; }
+  .rep-head{ display:flex; justify-content:space-between; align-items:flex-end; border-bottom:3px solid #86BC3F; padding-bottom:8px; font-size:.85rem; }
+  .rep-head b{ color:#4F7F1E; font-size:1.3rem; display:block; }
+  .rep-title{ margin:18px 0 6px; font-size:1.8rem; }
+  .rep-sec{ margin-top:22px; }
+  .rep-sec h3{ font-size:1.15rem; border-bottom:1px solid #E2E2E2; padding-bottom:4px; color:#333; }
+  .rep-dl{ display:grid; grid-template-columns:max-content 1fr; gap:4px 18px; margin:0; font-size:.92rem; }
+  .rep-dl dt{ font-weight:700; } .rep-dl dd{ margin:0; }
+  .rep-photos{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .rep-photos figure{ margin:0; } .rep-photos img{ width:100%; display:block; }
+  .rep-photos figcaption{ font-size:.8rem; font-weight:600; }
+  .rep-tip, .rep-line, .rep-k{ margin:0 0 10px; font-size:.9rem; }
+  .rep-tip p, .rep-line p, .rep-k p{ margin:2px 0; line-height:1.55; }
+  .rep-k h4{ margin:10px 0 2px; font-size:.98rem; }
+  .rep-table{ width:100%; border-collapse:collapse; font-size:.88rem; }
+  .rep-table th, .rep-table td{ text-align:left; border-bottom:1px solid #E2E2E2; padding:6px 4px; }
+  .rep-table td:last-child, .rep-table th:last-child{ text-align:right; white-space:nowrap; }
+  .rep-total td{ font-weight:700; border-top:2px solid #333; }
+  .rep-metrics{ padding-left:18px; font-size:.9rem; }
+  .rep-small{ font-size:.78rem; color:#6B6B6B; }
+  .report-doc.pdf-mode{ border:0; padding:0; max-width:none; }
+  .report-doc.pdf-mode .rep-sec{ break-inside:auto; }
+  /* Bundnavigation og footer */
+  .footer-nav{ display:flex; justify-content:space-between; align-items:center; padding:28px 0 0; gap:12px; max-width:820px; }
+  .step-count{ font-size:.86rem; color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+  .site-footer{ margin-inline:calc(50% - 50vw); margin-top:48px; background:#3A3A3A; color:#D6D6D6; padding:26px 20px; font-size:.88rem; }
+  .site-footer .inner{ max-width:1100px; margin:0 auto; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px 24px; }
+  .site-footer b{ color:#fff; }
+  .site-footer a{ color:var(--moss); }
+
+  @media print{
+    @page{ margin:16mm; }
+    body{ padding:0; font-size:11pt; }
+    .topbar,.footer-nav,.cta-row,.package-actions,.report-gate,.site-footer,.share-row,.hero-banner{ display:none !important; }
+    .step{ display:none !important; padding-top:0; }
+    #step-package, #step-report{ display:block !important; }
+    #step-report:not(.unlocked){ display:none !important; }
+    #step-report .dashboard > *:not(.report-doc){ display:none !important; }
+    .report-doc{ border:0; padding:0; }
+    #step-package{ display:none !important; }
+    #step-report{ page-break-before:auto; }
+    #step-report{ page-break-before:always; }
+    .print-head{ display:block; border-bottom:2px solid #86BC3F; padding-bottom:8px; margin-bottom:18px; }
+    .print-head b{ color:#4F7F1E; font-size:16pt; }
+    .total-block{ background:#fff !important; color:#000 !important; border-top:2px solid #333; padding:10px 0; }
+    .metric, .comp-card, tr{ break-inside:avoid; }
+    .term{ border-bottom:none; }
+    .term::after{ display:none !important; }
+  }
+</style>
+
+<div class="wrap">
+  <div class="print-head"><b>Mattle ApS</b> · Løsningsbygger · mattle.dk · <span id="print-date"></span></div>
+
+  <div class="topbar">
+    <a class="brand" href="https://mattle.dk/" aria-label="Mattle forside">
+      <!-- PLADSHOLDER: udskiftes med Mattles officielle logofil -->
+      <svg class="mark" viewBox="0 0 44 38" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M21 36C19 24 12 13 2 8c10-1 19 7 21 20z" fill="var(--moss)"/>
+        <path d="M23 36C24 20 31 7 42 2c-2 13-9 24-17 30z" fill="var(--moss)"/>
+      </svg>
+      <span class="name">Mattle</span>
+    </a>
+    <div class="legend" id="legend"></div>
+  </div>
+
+  <!-- STEP 0 -->
+  <section class="step active" id="step-start">
+    <div class="hero-banner">
+      <!-- PLADSHOLDER-illustration: erstattes af Mattles foto via --hero-img -->
+      <svg class="hero-art" viewBox="0 0 1200 520" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect width="1200" height="520" fill="#3C4A33"/>
+        <g fill="#4E6140">
+          <ellipse cx="140" cy="120" rx="170" ry="110"/><ellipse cx="430" cy="90" rx="190" ry="120"/>
+          <ellipse cx="760" cy="110" rx="200" ry="125"/><ellipse cx="1080" cy="100" rx="190" ry="120"/>
+        </g>
+        <g fill="#5C7249" opacity=".8">
+          <ellipse cx="280" cy="150" rx="120" ry="80"/><ellipse cx="610" cy="140" rx="130" ry="85"/><ellipse cx="930" cy="150" rx="130" ry="85"/>
+        </g>
+        <g stroke="#2E3A28" stroke-width="16"><line x1="150" y1="200" x2="150" y2="330"/><line x1="440" y1="190" x2="440" y2="330"/><line x1="770" y1="200" x2="770" y2="330"/><line x1="1080" y1="195" x2="1080" y2="330"/></g>
+        <rect y="330" width="1200" height="18" fill="#6E6E66"/>
+        <rect y="348" width="1200" height="92" fill="#55554E"/>
+        <g stroke="#6A6A62" stroke-width="2">
+          <line x1="0" y1="378" x2="1200" y2="378"/><line x1="0" y1="408" x2="1200" y2="408"/>
+        </g>
+        <rect x="470" y="356" width="260" height="62" fill="#2A8BC4" opacity=".35"/>
+        <g stroke="#86BC3F" stroke-width="2" opacity=".55" fill="none">
+          <path d="M150 348 l-30 70 M150 348 l0 80 M150 348 l30 70"/>
+          <path d="M1080 348 l-30 70 M1080 348 l0 80 M1080 348 l30 70"/>
+        </g>
+        <rect y="440" width="1200" height="80" fill="#48463F"/>
+      </svg>
+      <div class="hero-box"><h1>Byg den klimaløsning, dit areal faktisk har brug for</h1></div>
+      <div class="hero-sub">Inspireret af naturen – udviklet af videnskaben</div>
+    </div>
+
+    <div class="hero-intro">
+      <p class="lede">Svar på nogle spørgsmål om dit projekt. Du får en anbefalet løsning på tværs af bærelag, regnvand, bytræer, grønne tage og sportsarealer, med begrundelse for hvert valg og et prisoverslag med det samme.</p>
+      <div class="cta-row"><button class="btn" onclick="goTo('placering')">Start på dit projekt</button></div>
+      <div class="hero-facts">
+        <div class="hero-fact"><b>1</b><span>Find arealet på kortet, og vælg arealtype</span></div>
+        <div class="hero-fact"><b>2</b><span>Svar på uddybende spørgsmål om netop dine udfordringer</span></div>
+        <div class="hero-fact"><b>3</b><span>Få en anbefalet løsning, en pakke og et prisoverslag</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP: PLACERING -->
+  <section class="step" id="step-placering">
+    <div class="eyebrow">Om dit projekt</div>
+    <h2>Hvor ligger arealet?</h2>
+    <p class="lede">Find adressen, og tegn arealet på luftfotoet. Så beregner vi arealet og henter skråfotos fra fire retninger, så du og Mattle kan se forholdene omkring projektet.</p>
+    <div id="map-ready" hidden>
+      <div class="addr-wrap">
+        <label class="q" for="addr-input">Søg adresse</label>
+        <input type="text" id="addr-input" autocomplete="off" placeholder="F.eks. Park Allé 15, 6600 Vejen" aria-controls="addr-results">
+        <ul class="addr-results" id="addr-results"></ul>
+      </div>
+      <div id="map" role="application" aria-label="Luftfoto til indtegning af arealet"></div>
+      <div class="draw-bar">
+        <button type="button" class="btn btn-quiet" id="btn-undo" onclick="undoVertex()" disabled>Fortryd punkt</button>
+        <button type="button" class="btn" id="btn-finish" onclick="finishDrawing()" disabled>Afslut areal</button>
+        <button type="button" class="btn btn-outline" id="btn-redraw" onclick="redrawArea()" disabled>Tegn forfra</button>
+      </div>
+      <p class="draw-status" id="draw-status" aria-live="polite">Søg en adresse for at komme i gang.</p>
+      <div id="photos-wrap" hidden>
+        <h3 style="margin-top:28px;">Skråfotos af området</h3>
+        <p class="field-hint">Skråfotos viser facader, træer, terræn og adgangsforhold, som et luftfoto lige ovenfra skjuler. Arealets placering i fotoet er omtrentlig.</p>
+        <div class="photo-grid" id="photo-grid"></div>
+      </div>
+    </div>
+    <div id="map-unavailable" class="map-fallback" hidden>
+      <p style="margin:0 0 6px;"><b>Kortet er ikke tilgængeligt her.</b></p>
+      <p style="margin:0;">Du kan fortsætte og angive arealets størrelse selv. Kort og skråfotos virker, når løsningsbyggeren kører på mattle.dk.</p>
+    </div>
+    <div class="cta-row" style="margin-top:18px;"><button type="button" class="btn btn-quiet" onclick="skipPlacering()">Spring over og angiv arealet selv</button></div>
+  </section>
+
+  <!-- STEP 1 -->
+  <section class="step" id="step-terrain">
+    <div class="eyebrow">Om dit projekt</div>
+    <h2>Hvilken type areal drejer projektet sig om?</h2>
+    <p class="lede">Dit valg afgør, hvilke uddybende spørgsmål vi stiller næste side, og hvilke løsninger — fra grønne tage til sportsbaner — der er relevante for netop dit projekt.</p>
+    <div class="choice-grid" id="terrain-choices"></div>
+
+    <div class="choice-sub">
+      <span class="q">Hvilken rolle har du i projektet?</span>
+      <p class="field-hint">Valgfrit. Så tilpasser vi anbefalingen og de næste skridt til dig.</p>
+      <div class="choice-grid" id="rolle-choices"></div>
+    </div>
+    <div class="choice-sub">
+      <span class="q">Hvor langt er projektet?</span>
+      <p class="field-hint">Valgfrit.</p>
+      <div class="choice-grid" id="fase-choices"></div>
+    </div>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="step" id="step-behov">
+    <div class="eyebrow">Om dit projekt</div>
+    <h2>Uddybende behov</h2>
+    <p class="lede">Jo mere præcist du svarer, jo bedre begrundet bliver anbefalingen og prisoverslaget. Under hvert spørgsmål kan du nørde dybere i fagligheden bag.</p>
+
+    <div class="field-block">
+      <span class="q">Hvor stort er arealet, cirka?</span>
+      <div class="area-row">
+        <input type="range" id="area-slider" min="50" max="5000" step="50" value="500">
+        <span class="area-value"><span id="area-value">500</span> m²</span>
+      </div>
+    </div>
+
+    <div class="field-block conditional" id="traffic-block">
+      <span class="q">Hvilken trafik skal arealet kunne bære?</span>
+      <p class="why"><span class="term" tabindex="0" data-tip="Hvor tung og hyppig trafikken på arealet er. Den bestemmer, hvor kraftigt bærelaget skal dimensioneres.">Trafikklassen</span> har størst betydning for, hvordan bærelag og magasin skal dimensioneres. Vælges den for lavt, risikerer man sætninger i belægningen eller et magasin, der ikke kan bære.</p>
+      <div data-deep-slot="trafik"></div>
+      <div class="choice-grid" id="traffic-choices"></div>
+    </div>
+
+    <div class="dive conditional" id="tag-dive">
+      <div class="dive-label">Om taget</div>
+      <span class="q">Hvilken type grønt tag ønsker I?</span>
+      <p class="why">Et tags bæreevne sætter en hård grænse for, hvilken løsning der er mulig. Afklares typen tidligt, gerne i dialog med en statiker, undgår I omprojektering senere.</p>
+      <div data-deep-slot="tag"></div>
+      <div class="choice-grid" id="tagtype-choices"></div>
+    </div>
+
+    <div class="dive conditional" id="sport-dive">
+      <div class="dive-label">Om sportsarealet</div>
+      <span class="q">Hvilken type sportsareal er der tale om?</span>
+      <p class="why">Valget afgør både anlægsøkonomi og fremtidig vedligeholdelse: kunststof kræver stort set ingen pleje, mens græs kræver løbende drift til gengæld for mere grønt og biodiversitet.</p>
+      <div data-deep-slot="sport"></div>
+      <div class="choice-grid cols-2" id="sporttype-choices"></div>
+    </div>
+
+    <div class="field-block conditional" id="challenges-block">
+      <span class="q">Hvad er den største udfordring? Vælg gerne flere.</span>
+      <div class="choice-grid" id="challenge-choices"></div>
+    </div>
+
+    <div class="dive conditional" id="regnvand-dive">
+      <div class="dive-label">Om regnvandet</div>
+      <span class="q">Hvad skal der primært ske med regnvandet?</span>
+      <p class="why">Valget har stor betydning for anlægsøkonomi og drift: <span class="term" tabindex="0" data-tip="At regnvandet siver ned i jorden lokalt i stedet for at blive ledt til kloak.">nedsivning</span> kræver egnede jordbundsforhold, et magasin kræver plads under belægningen, og en klimavej forudsætter, at vejen alligevel skal (gen)etableres.</p>
+      <div data-deep-slot="regnvand"></div>
+      <div class="choice-grid" id="regnvandsmetode-choices"></div>
+
+      <span class="q" style="margin-top:22px;">Hvor store tag- og vejflader afvander til arealet?</span>
+      <p class="field-hint">Det <span class="term" tabindex="0" data-tip="De tag-, vej- og belægningsflader, hvis regnvand løber til arealet.">opland</span>, der leder vand til arealet. Sæt 0, hvis kun arealets egen regn skal håndteres.</p>
+      <div class="area-row">
+        <input type="range" id="opland-slider" min="0" max="10000" step="50" value="0" aria-label="Opland i m²">
+        <span class="area-value"><span id="opland-value">0</span> m²</span>
+      </div>
+    </div>
+
+    <div class="dive conditional" id="traeer-dive">
+      <div class="dive-label">Om bytræerne</div>
+      <span class="q">Hvor meget plads er der til rødderne under belægningen?</span>
+      <p class="why"><span class="term" tabindex="0" data-tip="En bærende kassette under belægningen, fyldt med jord, som rødderne kan vokse i uden at løfte belægningen.">Rodcellens</span> type afgør, om træet får nok jord at vokse i uden at hæve belægningen. En forkert vurdering er en af de hyppigste årsager til, at bytræer visner eller løfter fortove efter få år.</p>
+      <div data-deep-slot="traeer"></div>
+      <div class="choice-grid cols-2" id="plads-choices"></div>
+
+      <span class="q" style="margin-top:20px;">Hvilken vandingsløsning ønsker I til træerne?</span>
+      <p class="why">Især i de første 2-3 etableringsår afgør adgangen til vand, om træet overlever et tørt forår.</p>
+      <div class="choice-grid cols-2" id="vanding-choices"></div>
+    </div>
+
+    <div class="dive conditional" id="belaegning-dive">
+      <div class="dive-label">Om belægningen</div>
+      <span class="q">Skal den eksisterende belægning forstærkes, eller skiftes til en permeabel løsning?</span>
+      <p class="why">Beslutningen har stor betydning for budget og tidsplan: en forstærkning kan ofte udføres hurtigere og billigere, men løser ikke i sig selv skybrudsudfordringer, sådan som en permeabel belægning gør.</p>
+      <div data-deep-slot="permeabel"></div>
+      <div class="choice-grid cols-2" id="belaegning-choices"></div>
+    </div>
+  
+    <div class="dive conditional" id="jord-dive">
+      <div class="dive-label">Om jorden og omgivelserne</div>
+      <p class="field-hint">Svar det, du ved. "Ved ikke" er et fint svar, så tager Mattle det med i dialogen.</p>
+      <span class="q">Hvordan er jordbunden?</span>
+      <p class="why">Jordbunden afgør, om regnvandet kan nedsives, og hvor kraftigt bærelaget skal være. Leret jord tager vandet dårligt og giver en blødere bund.</p>
+      <div data-deep-slot="jordbund"></div>
+      <div class="choice-grid" id="jordbund-choices"></div>
+
+      <span class="q" style="margin-top:22px;">Hvor højt står grundvandet?</span>
+      <p class="why">Står grundvandet højt, er der ikke plads til at nedsive, og et magasin skal ofte bygges tæt.</p>
+      <div data-deep-slot="grundvand"></div>
+      <div class="choice-grid" id="grundvand-choices"></div>
+
+      <div class="conditional" id="ledninger-block">
+        <span class="q" style="margin-top:22px;">Er der ledninger i jorden, hvor træerne skal stå?</span>
+        <p class="why">Ledninger begrænser pladsen til rødderne og skal kunne repareres senere. Det har betydning for, hvilket rodsystem der passer.</p>
+      <div data-deep-slot="ledninger"></div>
+        <div class="choice-grid" id="ledninger-choices"></div>
+      </div>
+
+      <div class="conditional" id="afloeb-block">
+        <span class="q" style="margin-top:22px;">Hvordan er arealet kloakeret?</span>
+        <p class="why">Ved <span class="term" tabindex="0" data-tip="Kloak hvor regnvand og spildevand løber i hver sin ledning. Regnvandet ledes ofte direkte til vandløb eller søer.">separatkloak</span> ledes regnvandet ofte direkte ud i naturen, så vejvandet bør renses først.</p>
+      <div data-deep-slot="vejvand"></div>
+        <div class="choice-grid" id="afloeb-choices"></div>
+      </div>
+
+      <div class="conditional" id="saltning-block">
+        <span class="q" style="margin-top:22px;">Saltes arealet om vinteren?</span>
+        <p class="why">Vejsalt giver svidningsskader på træer og planter. Saltes der, anbefaler vi et vækstmedie, der beskytter rødderne.</p>
+      <div data-deep-slot="salt"></div>
+        <div class="choice-grid cols-2" id="saltning-choices"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="step" id="step-losning">
+    <div class="eyebrow">Anbefalet løsning</div>
+    <h2>Din sammensatte løsning</h2>
+    <p class="lede">Baseret på dine svar. Nogle komponenter har flere varianter. Vi peger på den, der passer bedst, og forklarer hvorfor. Fravælg eller tilføj komponenter, som det passer til dit projekt.</p>
+    <div id="comp-list"></div>
+  </section>
+
+  <!-- STEP 4 -->
+  <section class="step" id="step-package">
+    <div class="eyebrow">Pakke og pris</div>
+    <h2>Din pakke og prisoverslag</h2>
+    <p class="lede" id="package-lede">Priserne er vejledende spænd, som afhænger af de lokale forhold. Du kan se og bruge overslaget uden at oplyse kontaktoplysninger.</p>
+    <div id="fagtips-wrap">
+      <h3 style="margin:8px 0 0;">3 fagtips til dit projekt</h3>
+      <p class="field-hint" style="margin-top:4px;">Det skal du være opmærksom på for at lykkes, ud fra dine svar.</p>
+      <div class="tips" id="fagtips"></div>
+    </div>
+    <h3 style="margin:0;">Prisoverslag</h3>
+    <p class="field-hint" style="margin-top:4px;">Klik på en komponent for at se, hvad prisen afhænger af.</p>
+    <div class="table-scroll"><table class="package-table">
+      <thead><tr><th>Komponent</th><th>Omfang</th><th>Prisspænd</th></tr></thead>
+      <tbody id="package-body"></tbody>
+    </table></div>
+    <div class="total-block">
+      <span class="label">Samlet overslag</span>
+      <span class="value" id="package-total">–</span>
+    </div>
+    <p class="span-note" id="span-note"></p>
+    <p class="disclaimer">Spændene er vejledende eksempler og ikke Mattles prisliste. Den endelige pris fastlægges i dialog med Mattle ud fra projektets forhold.</p>
+    <div class="package-actions">
+      <button class="btn" onclick="goTo('report')">Hent projektrapporten</button>
+      <a class="btn btn-outline cta-contact" href="https://mattle.dk/kontakt/" target="_blank" rel="noopener" data-cta="pakke">Kontakt Mattle direkte</a>
+      <button class="btn btn-quiet" onclick="shareSolution()">Del eller gem løsningen</button>
+    </div>
+    <div class="share-row" id="share-row" hidden>
+      <input type="text" id="share-url" readonly aria-label="Link til din løsning">
+      <span class="share-status" id="share-status" aria-live="polite"></span>
+    </div>
+  </section>
+
+  <!-- STEP 5 -->
+  <section class="step" id="step-report">
+    <div class="eyebrow">Projektrapport</div>
+    <h2>Hent den samlede rapport om dit projekt</h2>
+    <p class="lede">Rapporten samler alt, hvad vi har lært om projektet undervejs, så du kan tage den med til bygherre, rådgiver eller kollegaer.</p>
+
+    <div class="report-gate" id="report-gate">
+      <div class="report-benefits" id="report-contents"></div>
+      <form id="report-form" onsubmit="return submitReport(event)" novalidate>
+        <div class="form-field"><label for="rep-name">Navn</label><input type="text" id="rep-name" name="rep-name" required autocomplete="name"></div>
+        <div class="form-field"><label for="rep-email">E-mail</label><input type="email" id="rep-email" name="rep-email" required autocomplete="email"></div>
+        <div class="form-field"><label for="rep-phone">Telefon (valgfrit)</label><input type="text" id="rep-phone" name="rep-phone" autocomplete="tel" inputmode="tel"></div>
+        <div class="form-field"><label for="rep-company">Firma eller organisation (valgfrit)</label><input type="text" id="rep-company" name="rep-company" autocomplete="organization"></div>
+        <div class="form-field"><label for="rep-place">Kommune eller placering (valgfrit)</label><input type="text" id="rep-place" name="rep-place"></div>
+        <div class="form-field"><label for="rep-year">Forventet anlægsår (valgfrit)</label>
+          <select id="rep-year" name="rep-year"><option value="">Vælg</option><option>I år</option><option>Næste år</option><option>Om 2 år eller senere</option><option>Ved ikke endnu</option></select></div>
+        <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <label class="consent"><input type="checkbox" id="rep-consent" name="rep-consent" required> <span>Jeg accepterer, at Mattle må kontakte mig om projektet.</span></label>
+        <label class="consent"><input type="checkbox" id="rep-news" name="rep-news"> <span>Send mig gerne Mattles nyhedsbrev med viden om klimaløsninger.</span></label>
+        <p class="privacy-note" id="privacy-note"></p>
+        <p class="lead-status" id="lead-status" role="alert"></p>
+        <button class="btn" type="submit">Hent rapporten</button>
+      </form>
+    </div>
+
+    <div class="dashboard" id="dashboard">
+      <p class="draw-status">Rapporten er hentet. Du kan også se den herunder.</p>
+      <div class="package-actions" style="margin-top:12px;">
+        <button class="btn" onclick="downloadReport()">Hent PDF igen</button>
+        <a class="btn btn-outline cta-contact" href="https://mattle.dk/kontakt/" target="_blank" rel="noopener" data-cta="rapport">Book en rådgivningssamtale</a>
+      </div>
+      <div class="report-doc" id="report-doc"></div>
+    </div>
+  </section>
+
+  <div class="footer-nav">
+    <button class="btn btn-quiet" id="btn-back" onclick="stepBack()">Tilbage</button>
+    <p class="step-error" id="step-error" role="alert" aria-live="assertive"></p>
+    <span class="step-count" id="step-count"></span>
+    <button class="btn" id="btn-next" onclick="stepNext()">Næste</button>
+  </div>
+
+  <footer class="site-footer"><div class="inner">
+    <span><b>Mattle ApS</b> · Jordforbindelsen til dit klimaprojekt</span>
+    <span>Tlf. <a href="tel:88441030">8844 1030</a> · <a href="https://mattle.dk" target="_blank" rel="noopener">mattle.dk</a> · <a href="https://mattle.dk/kontakt/" target="_blank" rel="noopener">Kontakt</a></span>
+  </div></footer>
+</div>
+
+<script>
+"use strict";
+
+function ic(inner, stroke){
+  return '<svg viewBox="0 0 44 44" fill="none" stroke="'+(stroke||'var(--moss-deep)')+'" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' +
+    '<circle cx="22" cy="22" r="20" fill="var(--moss-pale)" stroke="var(--line)" stroke-width="1"/>' + inner + '</svg>';
+}
+const ICONS = {
+  parkering: ic('<rect x="13" y="14" width="18" height="13" rx="2"/><circle cx="16.5" cy="27" r="2" fill="var(--ink-soft)" stroke="none"/><circle cx="27.5" cy="27" r="2" fill="var(--ink-soft)" stroke="none"/><path d="M16 18h9"/>', 'var(--ink-soft)'),
+  gade: ic('<path d="M12 31 L18 13 M32 31 L26 13"/><path d="M21 15 L20 20 M19 24 L18 29" stroke-dasharray="2.5 2.5"/>', 'var(--ink-soft)'),
+  institution: ic('<path d="M13 29V18l9-5 9 5v11"/><path d="M13 29h18"/><rect x="19" y="22" width="6" height="7"/>', 'var(--ink-soft)'),
+  bolig: ic('<path d="M12 20 L22 12 L32 20"/><path d="M15 19v10h14V19"/><rect x="19" y="23" width="6" height="6"/>', 'var(--ink-soft)'),
+  tag: ic('<rect x="11" y="18" width="22" height="9"/><path d="M16 18c1-3 3-3 4 0M23 18c1-3 3-3 4 0"/>', 'var(--moss)'),
+  sport: ic('<circle cx="22" cy="22" r="9"/><path d="M22 13v5l-5 4 2 5h7l2-5-5-4"/>', 'var(--water)'),
+
+  ja: ic('<rect x="9" y="19" width="22" height="7" rx="2.5"/><path d="M12 19l3-6h11l3 6"/><circle cx="15" cy="28" r="2" fill="var(--ink-soft)" stroke="none"/><circle cx="29" cy="28" r="2" fill="var(--ink-soft)" stroke="none"/>', 'var(--ink-soft)'),
+  nej: ic('<circle cx="22" cy="15" r="2.6"/><path d="M22 18v8M18 22h8M19 31l3-5 3 5"/>', 'var(--ink-soft)'),
+
+  god: ic('<path d="M13 22h18M13 22l3.5-3.5M13 22l3.5 3.5M31 22l-3.5-3.5M31 22l-3.5 3.5"/>', 'var(--moss)'),
+  begraenset: ic('<path d="M16 22h12M16 22l3-3M16 22l3 3M28 22l-3-3M28 22l-3 3"/><path d="M11 15v14M33 15v14"/>', 'var(--clay)'),
+
+  naturlig: ic('<path d="M22 12c4 5.5 6.5 9 6.5 12.5a6.5 6.5 0 0 1-13 0c0-3.5 2.5-7 6.5-12.5z"/>', 'var(--water)'),
+  kapillaer: ic('<path d="M13 18h18"/><path d="M16.5 18v3.5a1.8 1.8 0 0 0 1.8 1.8M27.5 18v3.5a1.8 1.8 0 0 1-1.8 1.8M22 23.3v6" />', 'var(--water)'),
+
+  nedsivning: ic('<path d="M22 11v13M17.5 19.5l4.5 4.5 4.5-4.5"/><path d="M13 29h18" stroke-dasharray="2 2.5"/>', 'var(--water)'),
+  magasin: ic('<rect x="12" y="14" width="20" height="16" rx="1.5"/><path d="M12 20h20M12 24h20" stroke="var(--water)"/>', 'var(--ink-soft)'),
+  klimavej: ic('<path d="M12 30 L18 12 M32 30 L26 12"/><circle cx="22" cy="22" r="2.6" fill="var(--water)" stroke="none"/>', 'var(--ink-soft)'),
+
+  forstaerkning: ic('<path d="M12 28h20M12 23h20M12 18h20"/><path d="M22 11l3 3-3 3-3-3z" fill="var(--ink-soft)" stroke="none"/>', 'var(--ink-soft)'),
+  permeabel: ic('<circle cx="16" cy="16" r="1.5" fill="var(--water)" stroke="none"/><circle cx="22" cy="16" r="1.5" fill="var(--water)" stroke="none"/><circle cx="28" cy="16" r="1.5" fill="var(--water)" stroke="none"/><circle cx="16" cy="22" r="1.5" fill="var(--water)" stroke="none"/><circle cx="22" cy="22" r="1.5" fill="var(--water)" stroke="none"/><circle cx="28" cy="22" r="1.5" fill="var(--water)" stroke="none"/><path d="M22 26v6"/>', 'var(--water)'),
+
+  greenroof: ic('<rect x="11" y="20" width="22" height="7"/><path d="M15 20c0-2 1-3 2-3s2 1 2 3M20.5 20c0-2 1-3 2-3s2 1 2 3M26 20c0-2 1-3 2-3s2 1 2 3"/>', 'var(--moss)'),
+  intensiv: ic('<rect x="11" y="22" width="22" height="6"/><path d="M11 25h22" stroke="var(--water)"/><path d="M22 22v-6"/><path d="M18.5 16c0-2 1.8-3.6 3.5-3.6s3.5 1.6 3.5 3.6z"/>', 'var(--moss)'),
+
+  kunststof: ic('<rect x="12" y="13" width="20" height="18"/><path d="M12 18h20M12 23h20M12 28h20M19 13v18M25 13v18"/>', 'var(--water)'),
+  graes: ic('<path d="M15 31v-11c0-2.7 1.8-3.6 2.7-1.8s.9 3.6-.9 3.6M22 31v-13c0-2.7 1.8-3.6 2.7-1.8s.9 4.5-.9 4.5M29 31v-11c0-2.7 1.8-3.6 2.7-1.8s.9 3.6-.9 3.6"/>', 'var(--moss)'),
+
+  skybrud: ic('<path d="M15 22a5.4 5.4 0 0 1 1-10.7A7.3 7.3 0 0 1 29 13.5a5.4 5.4 0 0 1-1 10.5z"/><path d="M17 27l-2 4.5M22 27l-2 4.5M27 27l-2 4.5"/>', 'var(--water)'),
+  bytraeer: ic('<circle cx="22" cy="17" r="8"/><path d="M22 24v8"/>', 'var(--moss)'),
+  forurening: ic('<path d="M22 12c4.5 5.5 7 9 7 12.5a7 7 0 0 1-14 0c0-3.5 2.5-7 7-12.5z"/><path d="M18.5 24.5l2.5 2.5 4-4.5" stroke="var(--clay)"/>', 'var(--water)'),
+  belaegning: ic('<rect x="12" y="12" width="8" height="8"/><rect x="24" y="12" width="8" height="8"/><rect x="12" y="24" width="8" height="8"/><path d="M25 25l7 7M32 25l-7 7" stroke="var(--clay)"/>', 'var(--ink-soft)'),
+  groent: ic('<path d="M22 31c-7-2-11-8-9-16 8 0 12.5 4.5 13.5 11 .8 2.7 0 4.5-1 5z"/><path d="M22 31c1-5.5 3-9 7.5-12.5"/>', 'var(--moss)'),
+};
+const PILLAR_ICON = {
+  'Bærelag & stabilisering': ic('<rect x="10" y="26" width="24" height="8"/><rect x="10" y="18" width="24" height="6"/><path d="M10 26h24" stroke="var(--panel)"/>', 'var(--ink-soft)'),
+  'Regnvandshåndtering': ICONS.magasin,
+  'Rodvenlig befæstelse': ICONS.bytraeer,
+  'Belægning': ICONS.belaegning,
+  'Vækstmedier': ICONS.groent,
+  'Grønt tag': ICONS.tag,
+  'Sport & fritid': ICONS.sport,
+  'Byrumsinventar': ic('<path d="M14 31V19l8-5 8 5v12"/><path d="M14 31h16"/><path d="M18 31v-6h8v6"/>', 'var(--moss)'),
+};
+
+/* ---------- fagord (forklares ved hover/tap) ---------- */
+const GLOSSARY = {
+  trafikklasse:'Hvor tung og hyppig trafikken på arealet er. Den bestemmer, hvor kraftigt bærelaget skal dimensioneres.',
+  porevolumen:'Den andel af et materiale, der er hulrum. Hulrummene kan fyldes med vand, luft eller rødder.',
+  opland:'De tag-, vej- og belægningsflader, hvis regnvand løber til arealet.',
+  nedsivning:'At regnvandet siver ned i jorden lokalt i stedet for at blive ledt til kloak.',
+  lar:'Lokal afledning af regnvand: vandet håndteres dér, hvor det falder.',
+  kapillaer:'Vand, der trækkes op gennem jorden nedefra som i en væge, så rødderne får vand uden pumper.',
+  rodcelle:'En bærende kassette under belægningen, fyldt med jord, som rødderne kan vokse i uden at løfte belægningen.',
+  evaerdi:'Et mål for bærelagets stivhed. Jo højere E-værdi, jo mere kan bærelaget bære.',
+  separat:'Kloak hvor regnvand og spildevand løber i hver sin ledning. Regnvandet ledes ofte direkte til vandløb eller søer.',
+  vaekstgaranti:'Mattle giver vækstgaranti på bytræer plantet med deres løsninger. Spørg Mattle om vilkårene i dit projekt.',
+};
+function term(key, label){
+  return '<span class="term" tabindex="0" data-tip="'+GLOSSARY[key].replace(/"/g,'&quot;')+'">'+label+'</span>';
+}
+function L(label, url){ return {label:label, url:url}; }
+const U = {
+  baerelag:'https://mattle.dk/loesninger/funktionelle-forstaerkede-baerelag-og-stabilisering/',
+  tencate:'https://mattle.dk/produkter/tencate-geotextiler-og-geonet/',
+  mirafi:'https://mattle.dk/produkter/mirafi-h2ri-stabilisering-over-bloed-bund/',
+  lar:'https://mattle.dk/klimaloesninger/lokal-afledning-af-regnvand/',
+  klimavej:'https://mattle.dk/klimaloesninger/klima-veje-til-skybrudssikring/',
+  permavoid:'https://mattle.dk/produkter/permdraen/',
+  draintank:'https://mattle.dk/produkter/lar-d-raintank/',
+  klimabed:'https://mattle.dk/klimaloesninger/optimering-af-regne/',
+  regnvandtraeer:'https://mattle.dk/klimaloesninger/regnvandshandtering-traeer/',
+  skovfoged:'https://mattle.dk/skovfogedens-bytraeer/',
+  arborraft:'https://mattle.dk/loesninger/arborraft-sandwichopbygning/',
+  treeparker:'https://mattle.dk/loesninger/rodkassette-treeparker/',
+  rodhaevning:'https://mattle.dk/loesninger/forebyg-rodhaevning/',
+  permeabel:'https://mattle.dk/loesninger/permeabel-baerelag-og-belaegning/',
+  permaweb:'https://mattle.dk/produkter/permaweb/',
+  asfalt:'https://mattle.dk/loesninger/forstaerkning-af-asfalt/',
+  vejvand:'https://mattle.dk/klimaloesninger/decentral-rensning-af-vejvand/',
+  drainclean:'https://mattle.dk/produkter/d-rainclean/',
+  salt:'https://mattle.dk/loesninger/salt-tolerante-vaekstmedier/',
+  vaekstmedier:'https://mattle.dk/loesninger/vaekstmedierog-jordblandinger/',
+  greenroof:'https://mattle.dk/loesninger/taghaver-green-roof/',
+  optigreen:'https://mattle.dk/loesninger/taghaver-green-roof/tage-groenne/',
+  tagpermavoid:'https://mattle.dk/loesninger/taghaver-permavoid/',
+  kunststof:'https://mattle.dk/klimaloesninger/multibaner-og-kunststofbaner/',
+  graes:'https://mattle.dk/klimaloesninger/graes-og-boldbaner/',
+  golpla:'https://mattle.dk/produkter/golpla/',
+  byrum:'https://mattle.dk/produkter/byrumsinventar/',
+  vanding:'https://mattle.dk/produkt-kategori/iltning-og-vanding/',
+  forankring:'https://mattle.dk/produkt-kategori/traeforankring/',
+  rodbarriere:'https://mattle.dk/produkt-kategori/rodbarrierer/',
+};
+
+const TERRAIN_OPTIONS = [
+  {id:'parkering', t:'Parkeringsplads', d:'kørende trafik'},
+  {id:'gade', t:'Gade, gågade eller plads', d:'befærdet byrum'},
+  {id:'institution', t:'Skolegård / institution', d:'blandet brug'},
+  {id:'bolig', t:'Bolig- eller erhvervsareal', d:'grønne fællesarealer'},
+  {id:'tag', t:'Tag eller tagterrasse', d:'grønt eller blåt tag'},
+  {id:'sport', t:'Sportsareal / boldbane', d:'idræt og fritid'},
+];
+const CHALLENGE_OPTIONS = [
+  {id:'skybrud', t:'Skybrud og oversvømmelse', d:'vandet skal holdes tilbage'},
+  {id:'bytraeer', t:'Nye bytræer skal have plads til at gro', d:'rødder under belægning', excl:['tag','sport']},
+  {id:'eksisterende', t:'Rodhævning ved eksisterende træer', d:'træerne skal bevares', excl:['tag','sport'], icon:'bytraeer'},
+  {id:'forurening', t:'Forurenet vejvand', d:'fra vej eller parkering', excl:['tag']},
+  {id:'belaegning', t:'Nedslidt belægning eller asfalt', d:'hyppige reparationer', excl:['tag','sport']},
+  {id:'groent', t:'Mere synligt grønt', d:'bedre mikroklima'},
+];
+const REGNVANDSMETODE_OPTIONS = [
+  {id:'nedsivning', t:'Nedsive lokalt', d:'Vandet skal ned i jorden tæt på, hvor det falder'},
+  {id:'magasin', t:'Holde tilbage i magasin', d:'Vandet skal forsinkes, før det ledes videre'},
+  {id:'klimavej', t:'Bruge selve vejen som magasin', d:'Vejen skal alligevel (gen)etableres og kan gøre dobbelt nytte'},
+];
+const TRAFFIC_OPTIONS = [
+  {id:'nej', t:'Gående og cyklister', d:'Ingen biler på arealet', icon:'nej'},
+  {id:'let', t:'Personbiler', d:'Parkering, varekørsel og lette køretøjer', icon:'ja'},
+  {id:'tung', t:'Lastbiler og busser', d:'Tung trafik, renovation eller brandvej', icon:'ja'},
+];
+const PLADS_OPTIONS = [
+  {id:'god', t:'God plads', d:'Der er plads i bredden under belægningen'},
+  {id:'begraenset', t:'Begrænset plads', d:'Arealet er tæt bebygget, og rødderne har trangt'},
+];
+const VANDING_OPTIONS = [
+  {id:'naturlig', t:'Naturlig nedbør', d:'Træerne klarer sig med den regn, der falder'},
+  {id:'kapillaer', t:'Kapillær vanding', d:'Træerne skal have vand fra et magasin, også i tørre perioder'},
+];
+const BELAEGNING_OPTIONS = [
+  {id:'forstaerkning', t:'Forstærk eksisterende', d:'Belægningen er i en stand, hvor den kan genbruges'},
+  {id:'permeabel', t:'Skift til permeabel', d:'Belægningen skal alligevel udskiftes'},
+];
+const TAGTYPE_OPTIONS = [
+  {id:'ekstensiv', t:'Ekstensivt grønt tag', d:'Let og vedligeholdelsesfrit, som de fleste tage kan bære', icon:'greenroof'},
+  {id:'intensiv', t:'Intensiv taghave', d:'En rigtig have på taget, kræver typisk en kraftigere konstruktion', icon:'intensiv'},
+  {id:'permavoid', t:'Vandhåndterende tag', d:'Taget holder på regnvandet og vander planterne selv', icon:'naturlig'},
+];
+const SPORTTYPE_OPTIONS = [
+  {id:'kunststof', t:'Kunststofbane', d:'Banen skal bruges intensivt året rundt'},
+  {id:'graes', t:'Græs- og boldbane', d:'Naturligt græs, der kan tåle belastning'},
+];
+const JORDBUND_OPTIONS = [
+  {id:'sand', t:'Sandet jord', d:'Vandet siver let ned'},
+  {id:'ler', t:'Leret jord', d:'Vandet siver dårligt ned'},
+  {id:'ukendt', t:'Ved ikke endnu', d:'Ingen jordbundsundersøgelse endnu'},
+];
+const GRUNDVAND_OPTIONS = [
+  {id:'lavt', t:'Lavt grundvand', d:'Mere end ca. 1 m under terræn'},
+  {id:'hoejt', t:'Højt grundvand', d:'Tæt på overfladen i våde perioder'},
+  {id:'ukendt', t:'Ved ikke', d:''},
+];
+const LEDNINGER_OPTIONS = [
+  {id:'mange', t:'Mange ledninger', d:'Kabler, fjernvarme eller kloak under arealet'},
+  {id:'faa', t:'Få eller ingen', d:'Frit under belægningen'},
+  {id:'ukendt', t:'Ved ikke', d:''},
+];
+const AFLOEB_OPTIONS = [
+  {id:'separat', t:'Separatkloak', d:'Regnvand ledes til vandløb eller sø'},
+  {id:'faelles', t:'Fælleskloak', d:'Regn- og spildevand i samme ledning'},
+  {id:'ukendt', t:'Ved ikke', d:''},
+];
+const SALTNING_OPTIONS = [
+  {id:'ja', t:'Ja, der saltes', d:'Vej, sti eller plads saltes om vinteren'},
+  {id:'nej', t:'Nej', d:'Arealet saltes ikke'},
+];
+
+const ROLLE_OPTIONS = [
+  {id:'kommune', t:'Kommune eller forsyning', d:'Bygherre eller projektleder'},
+  {id:'raadgiver', t:'Rådgiver eller landskabsarkitekt', d:'Projekterer løsningen'},
+  {id:'entreprenoer', t:'Entreprenør eller anlægsgartner', d:'Udfører projektet'},
+  {id:'ejendom', t:'Boligselskab eller ejendom', d:'Ejer eller driver arealet'},
+];
+const FASE_OPTIONS = [
+  {id:'ide', t:'Idé og afklaring', d:'Vi undersøger mulighederne'},
+  {id:'projektering', t:'Projektering', d:'Løsningen skal dimensioneres'},
+  {id:'udfoerelse', t:'Udbud eller udførelse', d:'Projektet skal bygges'},
+];
+const ROLE_CTA = {
+  kommune:{label:'Book en rådgivningssamtale', lede:'Brug overslaget til at vurdere økonomien tidligt. Mattle hjælper gerne med at kvalificere løsningen, før den skrives ind i projektet.'},
+  ejendom:{label:'Book en rådgivningssamtale', lede:'Brug overslaget til at vurdere økonomien tidligt. Mattle hjælper gerne med at kvalificere løsningen, før I går videre.'},
+  raadgiver:{label:'Få sparring på dimensioneringen', lede:'Brug pakken som udgangspunkt for projekteringen. Mattle hjælper med dimensionering af mængder, dybder og opbygninger.'},
+  entreprenoer:{label:'Få pris på materialerne', lede:'Brug pakken som udgangspunkt for mængder og materialer. Mattle giver en konkret pris ud fra projektets forhold.'},
+};
+function regnvandOpt(){ return state.groupOption['regnvand']; }
+
+function getTreeQty(a){ return state.qty['traeer'] ?? Math.max(1, Math.round(a.area/120)); }
+function poorInfiltration(a){ return a.jordbund==='ler' || a.grundvand==='hoejt'; }
+
+const GROUPS = [
+  {
+    id:'baerelag', pillar:'Bærelag & stabilisering', title:'Bærelag dimensioneret efter trafikken', required:true,
+    visibleIf:a=>a.terrain!=='tag',
+    unit:'m²', qty:a=>a.area,
+    fact:'Bærelaget er fundamentet for hele opbygningen. Det afgør, om belægning, magasin og rødder holder på sigt, og detaljerne under jorden er dem, der koster, hvis de er forkerte.',
+    links:[L('Bærelag og stabilisering', U.baerelag)],
+    options:a=>[
+      {id:'let', label:'Standard bærelag', price:450,
+        reason:'Arealet bruges kun af gående og cyklister, så bærelaget kan dimensioneres lettere. Det giver mindre afgravning, mindre materiale og et mindre CO₂-aftryk fra jordarbejdet.'},
+      {id:'forstaerket', label:'Forstærket bærelag med TenCate geotekstil', price:650,
+        reason:'Med biltrafik fordeler geotekstil eller geonet lasten, så bærelaget kan holdes tyndere uden sætninger. Tykkelse og materialevalg beregnes ud fra '+term('trafikklasse','trafikklassen')+' og den ønskede '+term('evaerdi','E-værdi')+'.',
+        links:[L('TenCate geotekstiler og geonet', U.tencate)]},
+      {id:'tung', label:'Stabiliseret bærelag til tung trafik (Mirafi® H2Ri)', price:820,
+        reason:'Lastbiler og busser stiller de største krav til bærelaget. Mirafi H2Ri stabiliserer også over blød bund, så man kan undgå at grave dybt ud og udskifte jorden.'+(a.jordbund==='ler'?' Det er særligt relevant, fordi I har angivet leret jord.':''),
+        links:[L('Mirafi H2Ri', U.mirafi), L('TenCate geotekstiler og geonet', U.tencate)]},
+    ],
+    defaultOption:a=> a.trafik==='tung' ? 'tung' : (a.trafik==='let' ? 'forstaerket' : 'let'),
+  },
+  {
+    id:'regnvand', pillar:'Regnvandshåndtering', title:'Regnvandsløsning ved skybrud',
+    visibleIf:a=>a.terrain!=='tag' && a.terrain!=='sport' && a.challenges.has('skybrud'),
+    unit:'m²', qty:a=>a.area,
+    fact:'Hvor meget vand løsningen skal kunne rumme, afhænger både af arealet selv og af det '+term('opland','opland')+', der afvander til det. Mattle ser regnvandet som en ressource, der kan give vand til byens træer og planter.',
+    options:a=>{
+      if(a.regnvandsmetode==='nedsivning') return [
+        {id:'lar', label:term('lar','LAR')+': nedsivning med permeabelt bærelag', price:300,
+          reason:'Vandet siver ned tæt på, hvor det falder. Det aflaster kloakken og holder vandet i det lokale kredsløb, og et permeabelt bærelag med Permaweb fungerer som buffer under belægningen.'+(poorInfiltration(a)?' Men I har angivet leret jord eller højt grundvand. Så skal en nedsivningstest vise, om jorden kan tage vandet, før denne løsning vælges.':(a.jordbund==='ukendt'||!a.jordbund?' Nedsivning forudsætter, at en nedsivningstest viser, at jorden kan tage vandet.':'')),
+          links:[L('LAR (Blue2Green)', U.lar), L('Permaweb', U.permaweb)]},
+        {id:'klimavej-taet', label:'Klimavej som tæt bassin', price:480,
+          reason:'Klimavejen kan bygges som et tæt bassin, hvor regnvandet holdes tilbage og bruges til vanding af træer og bede, før overskudsvandet ledes videre. Det er det sikre valg, når jorden ikke kan tage vandet.',
+          links:[L('Klimaveje', U.klimavej)]},
+      ];
+      if(a.regnvandsmetode==='klimavej') return [
+        {id:'klimavej', label:'Klimavej (EcoBase® og Accorder®)', price:480,
+          reason:'Vejkassen bliver selv magasinet. Med et '+term('porevolumen','porevolumen')+' på over 35 % kan en 50 cm opbygning rumme omkring 175 liter vand pr. m², og vejen er kørefast allerede under udførelsen. Vandet kan nedsives eller holdes tilbage til vanding af byens træer.'+(poorInfiltration(a)?' Med leret jord eller højt grundvand bygges den som tæt bassin.':''),
+          links:[L('Klimaveje', U.klimavej)]},
+      ];
+      return [
+        {id:'korsel', label:'Kørefast magasin (PermaVoid®)', price:420,
+          reason:'Med trafik på arealet skal magasinet bære last ovenfra. PermaVoid-kassetter spreder belastningen og kan dimensioneres fra personbiler til tunge lastvogne, mens de holder på vandet.',
+          links:[L('PermaVoid', U.permavoid), L('D-Raintank', U.draintank)]},
+        {id:'regnbed', label:'Klimabed med '+term('kapillaer','kapillær vanding')+' og magasin', price:260,
+          reason:'Uden kørende trafik kan vandet håndteres synligt i et klimabed. Et magasin under bedet og kapillær vanding giver planterne vand i tørre perioder, og filterjorden renser vandet for tungmetaller.',
+          links:[L('Klimabede', U.klimabed)]},
+      ];
+    },
+    defaultOption:a=>{
+      if(a.regnvandsmetode==='nedsivning') return poorInfiltration(a) ? 'klimavej-taet' : 'lar';
+      if(a.regnvandsmetode==='klimavej') return 'klimavej';
+      return a.traffic ? 'korsel' : 'regnbed';
+    },
+  },
+  {
+    id:'traeer', pillar:'Rodvenlig befæstelse', title:'Nye bytræer: Skovfogedens Bytræer™',
+    visibleIf:a=>a.terrain!=='tag' && a.terrain!=='sport' && a.challenges.has('bytraeer'),
+    unit:'træ', hasQty:true, defaultQty:a=>Math.max(1, Math.round(a.area/120)), qtyLabel:'antal træer',
+    fact:'Et bytræ skal have lys, luft, vand og jord, det kan vokse i. Under belægninger vokser rødderne ofte i stabilgrus og komprimeret jord i konkurrence med ledninger. Mattle planter efter konceptet Skovfogedens Bytræer og giver '+term('vaekstgaranti','vækstgaranti')+'. Valget mellem ArborRaft og TreeParker afklares endeligt ud fra projektets forhold.',
+    links:[L('Skovfogedens Bytræer', U.skovfoged)],
+    options:a=>[
+      {id:'arborraft', label:'ArborRaft® sandwichopbygning', price:14500,
+        reason:'Vi peger på ArborRaft, fordi der er plads under belægningen. Kassetterne lægges oven på et bærende vækstmedie (Optima Balance) og bærer trafikken. Ventilation i kassetterne danner en iltbarriere, så rødderne vokser i jorden og ikke op i belægningen.',
+        links:[L('ArborRaft', U.arborraft)]},
+      {id:'treeparker', label:'TreeParker® '+term('rodcelle','rodkassette'), price:21500,
+        reason:'Vi peger på TreeParker, fordi '+(a.ledninger==='mange'?'der er mange ledninger i jorden':'pladsen er trang')+'. TreeParker bærer tung trafik, kan justeres i højden fra 20 til 150 cm på byggepladsen og er designet, så ledninger kan føres igennem og repareres.',
+        links:[L('TreeParker', U.treeparker)]},
+    ],
+    defaultOption:a=> (a.plads==='begraenset' || a.ledninger==='mange') ? 'treeparker' : 'arborraft',
+  },
+  {
+    id:'eksist', pillar:'Rodvenlig befæstelse', title:'Revitalisering af eksisterende træer',
+    visibleIf:a=>a.terrain!=='tag' && a.terrain!=='sport' && a.challenges.has('eksisterende'),
+    unit:'træ', hasQty:true, defaultQty:a=>Math.max(1, Math.round(a.area/150)), qtyLabel:'antal eksisterende træer',
+    fact:'Eksisterende træer er en stor kapital, der har brugt årtier på at vokse. Fælder man dem for at løse rodhævninger, taber man skygge, køling og vandoptag, som nye træer først kan give igen mange år senere.',
+    links:[L('Forebyg rodhævning', U.rodhaevning)],
+    options:a=>[
+      {id:'arborraft-eks', label:'ArborRaft® til eksisterende træer', price:16500,
+        reason:'Stabilgrus omkring rødderne erstattes af egnet vækstmedie og ArborRaft-kassetter. Træet får bedre adgang til luft og vand, og belægningen ovenpå beskyttes mod nye rodhævninger.',
+        links:[L('ArborRaft', U.arborraft)]},
+    ],
+    defaultOption:a=>'arborraft-eks',
+  },
+  {
+    id:'gtag', pillar:'Grønt tag', title:'Grønt tag', required:true,
+    visibleIf:a=>a.terrain==='tag',
+    unit:'m²', qty:a=>a.area,
+    fact:'Et grønt tag holder på regnvandet dér, hvor det falder, isolerer bygningen og giver levesteder for insekter. Tagets bæreevne sætter grænsen for, hvilken opbygning der er mulig.',
+    options:a=>[
+      {id:'ekstensiv', label:'Ekstensivt grønt tag (Green Roof)', price:650,
+        reason:'Et ekstensivt tag er let, kræver næsten ingen vedligeholdelse og passer til de fleste tagkonstruktioner uden ekstra forstærkning.',
+        links:[L('Green Roof', U.greenroof), L('Grønne tage fra Optigreen', U.optigreen)]},
+      {id:'intensiv', label:'Intensiv taghave', price:1250,
+        reason:'En intensiv taghave giver plads til rigtige bede, buske og ophold, men kræver typisk en kraftigere tagkonstruktion. Mattles letvægts-tagjord holder vægten nede.',
+        links:[L('Vækstmedier til taghaver', U.vaekstmedier)]},
+      {id:'permavoid', label:'Vandhåndterende tag med PermaVoid®', price:980,
+        reason:'PermaVoid-kassetter under vækstmediet holder på regnvandet og giver det tilbage til planterne via kapillærvirkning. Vandstanden kan styres med overløb eller sensorer, og et tag på 1.000 m² kan rumme omkring 85 m³ vand.',
+        links:[L('Taghaver med PermaVoid', U.tagpermavoid)]},
+    ],
+    defaultOption:a=> a.tagtype || 'ekstensiv',
+  },
+  {
+    id:'sport', pillar:'Sport & fritid', title:'Sportsareal', required:true,
+    visibleIf:a=>a.terrain==='sport',
+    unit:'m²', qty:a=>a.area,
+    fact:'Både kunststofbaner og græsbaner kan bygges med et stærkt, drænende bærelag, hvor regnvandet opmagasineres under banen i stedet for at blive ledt væk.',
+    options:a=>[
+      {id:'kunststof', label:'Kunststofbane', price:780,
+        reason:'En kunststofbane giver en ensartet spilleflade og kan bruges intensivt året rundt, uafhængigt af vejret.',
+        links:[L('Kunststofbaner', U.kunststof)]},
+      {id:'graes', label:'Græs- og boldbane med magasin (Blue2Green)', price:420,
+        reason:'Regnvandet opmagasineres under banen og gives tilbage til græsset i tørre perioder, så banen holder sig grøn uden kunstvanding. En bane på 8.000 m² kan rumme omkring 680 m³ vand.',
+        links:[L('Græs- og boldbaner', U.graes), L('Golpla græsarmering', U.golpla)]},
+    ],
+    defaultOption:a=> a.sporttype==='graes' ? 'graes' : 'kunststof',
+  },
+];
+
+const STANDALONES = [
+  {
+    id:'vanding', pillar:'Rodvenlig befæstelse', name:'Kapillær vanding af træerne',
+    visibleIf:a=>a.terrain!=='tag' && a.terrain!=='sport' && (a.challenges.has('bytraeer')||a.challenges.has('eksisterende')),
+    recommendedWhen:a=>a.vanding==='kapillaer',
+    addableHint:'Tilføj, hvis træerne skal have vand fra et magasin og ikke kun fra den regn, der falder.',
+    fact:'Regnvandet samles, gemmes og gives tilbage til træet nedefra, uden pumper. Det holder træerne i vækst i tørre perioder og er især vigtigt de første år efter plantning.',
+    links:[L('Regnvandshåndtering med træer', U.regnvandtraeer), L('Iltning og vanding', U.vanding)],
+    calc:a=>({qty:getTreeQty(a), unit:'træ', price:3200}),
+  },
+  {
+    id:'rodsikring', pillar:'Rodvenlig befæstelse', name:'Træforankring og rodbarrierer',
+    visibleIf:a=>a.terrain!=='tag' && a.terrain!=='sport' && a.challenges.has('bytraeer'),
+    recommendedWhen:a=>a.ledninger==='mange',
+    addableHint:'Tilføj, hvis rødderne skal holdes væk fra ledninger eller fundamenter.',
+    fact:'Nyplantede træer skal forankres, til rødderne har fået fat. Rodbarrierer styrer rødderne væk fra ledninger og fundamenter, hvor de ellers kan gøre skade.',
+    links:[L('Træforankring', U.forankring), L('Rodbarrierer', U.rodbarriere)],
+    calc:a=>({qty:getTreeQty(a), unit:'træ', price:1800}),
+  },
+  {
+    id:'permeabel', pillar:'Belægning', name:'Permeabel belægning og bærelag (Permaweb®)',
+    visibleIf:a=>a.terrain!=='tag',
+    recommendedWhen:a=>a.belaegningsvalg==='permeabel' || (a.challenges.has('skybrud') && a.terrain!=='sport' && !['lar','klimavej','klimavej-taet'].includes(regnvandOpt())),
+    addableHint:'Tilføj, hvis belægningen selv skal lade vandet sive igennem og aflaste kloakken.',
+    hintFor:a=> a.challenges.has('skybrud') && ['lar','klimavej','klimavej-taet'].includes(regnvandOpt()) ? 'Den valgte regnvandsløsning har allerede et vandførende bærelag. Tilføj kun, hvis belægningen også skal skiftes.' : null,
+    excludes:['forstaerkning'],
+    fact:'En permeabel belægning lader regnvandet sive ned i bærelaget i stedet for at løbe til kloak. Permaweb fungerer som buffer under belægningen, og fordi der skal graves mindre ud, skånes eksisterende rødder.',
+    links:[L('Permeabelt bærelag', U.permeabel), L('Permaweb', U.permaweb)],
+    calc:a=>({qty:a.area, unit:'m²', price:320}),
+  },
+  {
+    id:'forstaerkning', pillar:'Belægning', name:'Forstærkning af asfalt',
+    visibleIf:a=>a.terrain!=='tag' && a.challenges.has('belaegning'),
+    recommendedWhen:a=>a.belaegningsvalg==='forstaerkning',
+    excludes:['permeabel'],
+    addableHint:'Tilføj, hvis den eksisterende asfalt kan forstærkes i stedet for at blive brudt op.',
+    fact:'Når en slidt asfaltbelægning kan genbruges, kan en forstærkning forlænge levetiden uden at bryde det hele op. Det er ofte både hurtigere og billigere end en fuld udskiftning.',
+    links:[L('Forstærkning af asfalt', U.asfalt)],
+    calc:a=>({qty:a.area, unit:'m²', price:260}),
+  },
+  {
+    id:'rensning', pillar:'Regnvandshåndtering', name:'Rensning af vejvand (INNOLET® og D-Rainclean®)',
+    visibleIf:a=>a.terrain!=='tag',
+    recommendedWhen:a=>a.challenges.has('forurening') || (a.afloeb==='separat' && a.traffic),
+    addableHint:'Tilføj, hvis vand fra vej eller parkering skal renses, før det ledes videre eller nedsives.',
+    fact:'Vejvand indeholder tungmetaller, olie og partikler fra dækslid. INNOLET® monteres i eksisterende vejbrønde og renser vandet, før det ledes videre, og D-Rainclean® filterjord renser i regnbede. Ved '+term('separat','separatkloak')+' er rensning særligt vigtig, fordi vandet ledes direkte ud i naturen.',
+    links:[L('Decentral rensning af vejvand', U.vejvand), L('D-Rainclean', U.drainclean)],
+    calc:a=>({qty:a.area, unit:'m²', price:210}),
+  },
+  {
+    id:'saltmedie', pillar:'Vækstmedier', name:'Salttolerant vækstmedie (PERLHUMUS®)',
+    visibleIf:a=>a.challenges.has('groent')||a.challenges.has('bytraeer')||a.challenges.has('eksisterende'),
+    recommendedWhen:a=>a.saltning==='ja',
+    addableHint:'Tilføj, hvis arealet saltes om vinteren, så rødderne beskyttes mod saltskader.',
+    fact:'Vejsalt giver svidningsskader på træer og planter, og saltværn beskytter ikke mod salttåge. PERLHUMUS® i vækstjorden binder saltenes metal-ioner og afbøder de høje saltkoncentrationer efter vintersaltning.',
+    links:[L('Salttolerante vækstmedier', U.salt)],
+    calc:a=>({qty:Math.max(1,Math.round(a.area*0.12)), unit:'m²', price:95}),
+  },
+  {
+    id:'byrum', pillar:'Byrumsinventar', name:'Byrumsinventar og grønne elementer',
+    visibleIf:a=>true,
+    recommendedWhen:a=>a.challenges.has('groent'),
+    addableHint:'Tilføj, hvis I ønsker plantekummer, højbede eller træhulsriste i byrummet.',
+    fact:'Plantekummer, højbedskanter, grønne øer og træhulsriste giver synligt grønt, skygge og bedre mikroklima, også hvor der ikke kan plantes direkte i jorden.',
+    links:[L('Byrumsinventar', U.byrum)],
+    calc:a=>({qty:undefined, unit:'enhed', price:4200}),
+    hasQty:true, defaultQty:a=>Math.max(1, Math.round(a.area/150)), qtyLabel:'antal enheder',
+  },
+];
+
+const PILLAR_ORDER = ['Bærelag & stabilisering','Regnvandshåndtering','Belægning','Rodvenlig befæstelse','Vækstmedier','Grønt tag','Sport & fritid','Byrumsinventar'];
+
+const state = {
+  terrain:null, area:500, opland:0, traffic:null, plads:null, vanding:null,
+  regnvandsmetode:null, belaegningsvalg:null, tagtype:null, sporttype:null,
+  jordbund:null, grundvand:null, ledninger:null, afloeb:null, saltning:null,
+  rolle:null, fase:null,
+  challenges:new Set(), autoIncluded:new Set(),
+  groupIncluded:{}, groupOption:{}, groupTouched:{},
+  included:new Set(), touchedInclude:{},
+  qty:{}, reportUnlocked:false,
+};
+
+const STEPS = ['start','placering','terrain','behov','losning','package','report'];
+const STEP_LABELS = {start:'Start', placering:'Placering', terrain:'Areal', behov:'Behov', losning:'Løsning', package:'Pris', report:'Rapport'};
+let stepIndex = 0;
+
+function getAnswers(){
+  return {
+    terrain:state.terrain, area:state.area, opland:state.opland,
+    trafik:state.traffic, traffic: state.traffic==='let' || state.traffic==='tung',
+    plads: state.plads, vanding: state.vanding,
+    regnvandsmetode: state.regnvandsmetode, belaegningsvalg: state.belaegningsvalg,
+    tagtype: state.tagtype, sporttype: state.sporttype,
+    jordbund: state.jordbund, grundvand: state.grundvand, ledninger: state.ledninger,
+    afloeb: state.afloeb, saltning: state.saltning,
+    challenges: state.challenges,
+  };
+}
+function formatKr(n){ return Math.round(n).toLocaleString('da-DK') + ' kr.'; }
+
+/* ---------- generic choice grid ---------- */
+function renderChoiceGrid(container, options, isSel, onPick, multi){
+  container.innerHTML = '';
+  options.forEach(opt=>{
+    const el = document.createElement('label');
+    el.className = 'choice' + (isSel(opt.id) ? ' checked' : '');
+    const iconKey = opt.icon || opt.id;
+    const iconHtml = ICONS[iconKey] ? '<div class="choice-icon">'+ICONS[iconKey]+'</div>' : '';
+    el.setAttribute('data-choice', container.id+':'+opt.id);
+    el.innerHTML = '<input type="'+(multi?'checkbox':'radio')+'" name="grp-'+container.id+'"'+(isSel(opt.id)?' checked':'')+' data-focus-key="ch-'+container.id+'-'+opt.id+'">' + iconHtml +
+      '<span class="t">'+opt.t+'</span>' + (opt.d?'<span class="d">'+opt.d+'</span>':'');
+    el.addEventListener('click', function(e){
+      e.preventDefault();
+      onPick(opt.id);
+      track('mattle_answer', {question:container.id.replace('-choices',''), answer:opt.id, selected:isSel(opt.id)});
+      clearStepError();
+      const key = 'ch-'+container.id+'-'+opt.id;
+      renderTerrainStep(); renderBehovStep(); updateFieldVisibility();
+      const again = document.querySelector('[data-focus-key="'+key+'"]'); if(again) again.focus();
+    });
+    container.appendChild(el);
+  });
+}
+function renderTerrainStep(){
+  renderChoiceGrid(document.getElementById('terrain-choices'), TERRAIN_OPTIONS,
+    id=>state.terrain===id, function(id){ state.terrain=id; }, false);
+  renderChoiceGrid(document.getElementById('rolle-choices'), ROLLE_OPTIONS,
+    id=>state.rolle===id, function(id){ state.rolle = state.rolle===id ? null : id; }, false);
+  renderChoiceGrid(document.getElementById('fase-choices'), FASE_OPTIONS,
+    id=>state.fase===id, function(id){ state.fase = state.fase===id ? null : id; }, false);
+}
+function renderBehovStep(){
+  const grid = function(id, opts, key){
+    renderChoiceGrid(document.getElementById(id), opts, x=>state[key]===x, function(x){ state[key]=x; }, false);
+  };
+  renderChoiceGrid(document.getElementById('challenge-choices'), CHALLENGE_OPTIONS.filter(o=>!o.excl||!o.excl.includes(state.terrain)),
+    id=>state.challenges.has(id), function(id){ state.challenges.has(id)?state.challenges.delete(id):state.challenges.add(id); }, true);
+  grid('regnvandsmetode-choices', REGNVANDSMETODE_OPTIONS, 'regnvandsmetode');
+  grid('traffic-choices', TRAFFIC_OPTIONS, 'traffic');
+  grid('plads-choices', PLADS_OPTIONS, 'plads');
+  grid('vanding-choices', VANDING_OPTIONS, 'vanding');
+  grid('belaegning-choices', BELAEGNING_OPTIONS, 'belaegningsvalg');
+  grid('tagtype-choices', TAGTYPE_OPTIONS, 'tagtype');
+  grid('sporttype-choices', SPORTTYPE_OPTIONS, 'sporttype');
+  grid('jordbund-choices', JORDBUND_OPTIONS, 'jordbund');
+  grid('grundvand-choices', GRUNDVAND_OPTIONS, 'grundvand');
+  grid('ledninger-choices', LEDNINGER_OPTIONS, 'ledninger');
+  grid('afloeb-choices', AFLOEB_OPTIONS, 'afloeb');
+  grid('saltning-choices', SALTNING_OPTIONS, 'saltning');
+}
+function bindSlider(sliderId, valueId, key){
+  const slider = document.getElementById(sliderId);
+  if(key==='area') slider.max = Math.max(5000, Math.ceil(state.area/1000)*1000);
+  slider.value = state[key];
+  document.getElementById(valueId).textContent = state[key].toLocaleString('da-DK');
+  slider.oninput = function(){
+    state[key] = parseInt(slider.value,10);
+    document.getElementById(valueId).textContent = state[key].toLocaleString('da-DK');
+  };
+}
+function renderArea(){
+  bindSlider('area-slider','area-value','area');
+  bindSlider('opland-slider','opland-value','opland');
+}
+function show(id, cond){ document.getElementById(id).classList.toggle('shown', !!cond); }
+function updateFieldVisibility(){
+  const terrain = state.terrain, ch = state.challenges;
+  const ground = terrain!=='tag';
+  const plants = ch.has('bytraeer') || ch.has('eksisterende') || ch.has('groent');
+  show('traffic-block', terrain!=='tag' && terrain!=='sport');
+  show('tag-dive', terrain==='tag');
+  show('sport-dive', terrain==='sport');
+  show('challenges-block', true);
+  show('traeer-dive', ch.has('bytraeer') && terrain!=='tag' && terrain!=='sport');
+  show('regnvand-dive', ch.has('skybrud') && terrain!=='tag' && terrain!=='sport');
+  show('belaegning-dive', ch.has('belaegning') && terrain!=='tag');
+  show('jord-dive', ground && (ch.size>0));
+  show('ledninger-block', (ch.has('bytraeer') || ch.has('eksisterende')) && ground);
+  show('afloeb-block', ground && (ch.has('skybrud') || ch.has('forurening')));
+  show('saltning-block', ground && terrain!=='sport' && plants);
+}
+/* ---------- results ---------- */
+function ensureDefaults(){
+  const a = getAnswers();
+  GROUPS.forEach(function(g){
+    if(!g.visibleIf(a)) return;
+    if(state.groupOption[g.id]===undefined || !state.groupTouched[g.id]){
+      state.groupOption[g.id] = g.defaultOption(a);
+    }
+    if(state.groupIncluded[g.id]===undefined){
+      state.groupIncluded[g.id] = !!g.required || (g.recommendedWhen ? g.recommendedWhen(a) : true);
+    }
+  });
+  STANDALONES.forEach(function(c){
+    if(state.touchedInclude[c.id]) return;
+    const rec = c.visibleIf(a) && c.recommendedWhen(a);
+    const blocked = (c.excludes||[]).some(function(x){ return state.included.has(x) && state.touchedInclude[x]; });
+    if(rec && !blocked){ state.included.add(c.id); state.autoIncluded.add(c.id); }
+    else if(state.autoIncluded.has(c.id)){ state.included.delete(c.id); state.autoIncluded.delete(c.id); }
+  });
+}
+function pillarGroupsAndItems(){
+  const items = [];
+  GROUPS.forEach(function(g){ items.push({type:'group', pillar:g.pillar, def:g}); });
+  STANDALONES.forEach(function(c){ items.push({type:'standalone', pillar:c.pillar, def:c}); });
+  const byPillar = {};
+  items.forEach(function(it){ (byPillar[it.pillar]=byPillar[it.pillar]||[]).push(it); });
+  return PILLAR_ORDER.filter(function(p){ return byPillar[p]; }).map(function(p){ return {pillar:p, items:byPillar[p]}; });
+}
+function renderResults(){
+  ensureDefaults();
+  const a = getAnswers();
+  const list = document.getElementById('comp-list');
+  list.innerHTML = '';
+  pillarGroupsAndItems().forEach(function(section){
+    const visibleItems = section.items.filter(function(it){ return it.def.visibleIf(a); });
+    if(visibleItems.length===0) return;
+    const h = document.createElement('div');
+    h.className = 'pillar-heading';
+    h.innerHTML = '<div class="p-icon">'+(PILLAR_ICON[section.pillar]||'')+'</div><h3>'+section.pillar+'</h3>';
+    list.appendChild(h);
+    visibleItems.forEach(function(it){
+      list.appendChild(it.type==='group' ? renderGroupCard(it.def, a) : renderStandaloneCard(it.def, a));
+    });
+  });
+  if(list.innerHTML===''){
+    list.innerHTML = '<p class="hint">Ingen relevante løsninger endnu — gå tilbage og svar på de uddybende spørgsmål.</p>';
+  }
+}
+function deepKeyFor(id, optId){
+  if(id==='regnvand') return (optId==='klimavej'||optId==='klimavej-taet') ? 'klimavej' : (optId==='lar' ? 'jordbund' : 'regnvand');
+  return {baerelag:'trafik', traeer:'traeer', eksist:'eksisterende', gtag:'tag', sport:'sport', vanding:'vanding', rodsikring:'ledninger',
+    permeabel:'permeabel', rensning:'vejvand', saltmedie:'salt'}[id] || null;
+}
+function updateCardSub(card, id){
+  const line = collectLineItems().find(function(l){ return l.id===id; });
+  const sub = card.querySelector('.comp-price .sub');
+  if(line && sub) sub.textContent = line.qty.toLocaleString('da-DK')+' '+line.unit+' · '+formatSpan(line.lo, line.hi, line.hi>100000?5000:1000);
+}
+function refreshResults(){
+  const ae = document.activeElement;
+  const key = ae && ae.getAttribute ? ae.getAttribute('data-focus-key') : null;
+  renderResults(); renderPackage();
+  if(key){ const el = document.querySelector('[data-focus-key="'+key+'"]'); if(el) el.focus(); }
+}
+function bindCheck(card, key, included, onToggle){
+  const el = card.querySelector('.comp-check');
+  el.setAttribute('tabindex','0'); el.setAttribute('data-focus-key', key);
+  const title = card.querySelector('h4');
+  if(title) el.setAttribute('aria-label', (included?'Fravælg ':'Tilføj ')+title.textContent);
+  const act = function(){ onToggle(); refreshResults(); };
+  el.addEventListener('click', act);
+  el.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); act(); } });
+}
+function linksHtml(links){
+  if(!links || !links.length) return '';
+  return '<p class="more-links">Læs mere hos Mattle: ' + links.map(function(l){
+    return '<a href="'+l.url+'" target="_blank" rel="noopener">'+l.label+'</a>';
+  }).join(', ') + '</p>';
+}
+function renderGroupCard(g, a){
+  const included = state.groupIncluded[g.id];
+  const opts = g.options(a);
+  let optId = state.groupOption[g.id];
+  if(!opts.find(function(o){return o.id===optId;})) optId = opts[0].id;
+  const opt = opts.find(function(o){return o.id===optId;});
+  const recommendedOptId = g.defaultOption(a);
+  const qty = g.hasQty ? (state.qty[g.id] ?? g.defaultQty(a)) : g.qty(a);
+  const subtotal = opt.price * qty;
+  const sp = priceSpan(g.id, opt.price, qty, g.unit, a);
+
+  const card = document.createElement('div');
+  card.className = 'comp-card' + (included?' included':'') + (g.required?' required':'');
+  const checkHtml = '<div class="comp-check" role="checkbox" aria-checked="'+included+'"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5L6.2 12L13 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>';
+
+  card.innerHTML =
+    '<div class="comp-head">' + checkHtml +
+      '<div class="comp-main">' +
+        (g.required ? '<span class="badge required">Altid inkluderet</span>' : (included ? '<span class="badge">Inkluderet</span>' : '')) +
+        '<h4>'+g.title+'</h4>' +
+        '<p class="fact">'+g.fact+'</p>' + linksHtml((g.links||[]).concat(opt.links||[])) +
+      '</div>' +
+      '<div class="comp-price"><span class="from">ca.</span><span class="amt">'+formatUnitSpan(sp.unitLo, sp.unitHi, g.unit)+'</span>' +
+        '<div class="sub">'+qty.toLocaleString('da-DK')+' '+g.unit+' · '+formatSpan(sp.lo, sp.hi, sp.hi>100000?5000:1000)+'</div></div>' +
+    '</div>' +
+    '<div class="comp-body" style="'+(included?'':'display:none;')+'">' +
+      '<div class="pill-row">' + opts.map(function(o){
+        return '<span class="pill '+(o.id===optId?'active':'')+' '+(o.id===recommendedOptId?'rec':'')+'" data-opt="'+o.id+'">'+o.label+'<span class="pp">ca. '+formatUnitSpan(priceSpan(g.id,o.price,1,g.unit,a).unitLo, priceSpan(g.id,o.price,1,g.unit,a).unitHi, g.unit)+'</span></span>';
+      }).join('') + '</div>' +
+      '<p class="reason">'+opt.reason+'</p>' + deepHtml(deepKeyFor(g.id, opt.id)) +
+      (g.hasQty ? '<div class="qty-line">'+g.qtyLabel+': <input type="number" min="1" value="'+qty+'" data-group="'+g.id+'"></div>' : '') +
+    '</div>';
+
+  if(!g.required){
+    bindCheck(card, 'gr-'+g.id, included, function(){
+      state.groupIncluded[g.id] = !state.groupIncluded[g.id];
+      track('mattle_component_toggle', {component:g.id, included:state.groupIncluded[g.id]});
+    });
+  } else {
+    card.querySelector('.comp-check').setAttribute('aria-disabled','true');
+  }
+  const pillRow = card.querySelector('.pill-row');
+  if(pillRow){ pillRow.setAttribute('role','radiogroup'); pillRow.setAttribute('aria-label','Variant af '+g.title.replace(/<[^>]+>/g,'')); }
+  card.querySelectorAll('.pill').forEach(function(p){
+    const oid = p.getAttribute('data-opt');
+    p.setAttribute('role','radio'); p.setAttribute('tabindex','0');
+    p.setAttribute('aria-checked', String(p.classList.contains('active')));
+    p.setAttribute('data-focus-key','pill-'+g.id+'-'+oid);
+    const pick = function(){
+      state.groupOption[g.id] = oid; state.groupTouched[g.id] = true;
+      track('mattle_variant_select', {component:g.id, variant:oid});
+      refreshResults();
+    };
+    p.addEventListener('click', pick);
+    p.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); pick(); } });
+  });
+  const qtyInput = card.querySelector('input[type="number"]');
+  if(qtyInput){
+    qtyInput.addEventListener('click', function(e){ e.stopPropagation(); });
+    qtyInput.addEventListener('input', function(e){
+      state.qty[g.id] = Math.max(1, parseInt(e.target.value||'1',10));
+      renderPackage(); updateCardSub(card, g.id);
+    });
+  }
+  if(!included && !g.required){
+    const hint = document.createElement('p');
+    hint.className = 'hint';
+    hint.style.padding = '0 18px 16px 55px';
+    hint.textContent = 'Klik for at tilføje til pakken.';
+    card.appendChild(hint);
+  }
+  return card;
+}
+function renderStandaloneCard(c, a){
+  const included = state.included.has(c.id);
+  const calc = c.calc(a);
+  const qty = c.hasQty ? (state.qty[c.id] ?? c.defaultQty(a)) : calc.qty;
+  const subtotal = calc.price * qty;
+  const recommended = c.recommendedWhen(a);
+  const sp = priceSpan(c.id, calc.price, qty, calc.unit, a);
+
+  const card = document.createElement('div');
+  card.className = 'comp-card' + (included?' included':'');
+  const checkHtml = '<div class="comp-check" role="checkbox" aria-checked="'+included+'"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5L6.2 12L13 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>';
+
+  card.innerHTML =
+    '<div class="comp-head">' + checkHtml +
+      '<div class="comp-main">' +
+        (included ? '<span class="badge">'+(recommended?'Anbefalet':'Tilføjet')+'</span>' : (recommended?'<span class="badge">Anbefalet</span>':'')) +
+        '<h4>'+c.name+'</h4>' +
+        '<p class="fact">'+c.fact+'</p>' + linksHtml(c.links) +
+      '</div>' +
+      '<div class="comp-price"><span class="from">ca.</span><span class="amt">'+formatUnitSpan(sp.unitLo, sp.unitHi, calc.unit)+'</span>' +
+        '<div class="sub">'+qty.toLocaleString('da-DK')+' '+calc.unit+' · '+formatSpan(sp.lo, sp.hi, sp.hi>100000?5000:1000)+'</div></div>' +
+    '</div>' +
+    '<div class="comp-body" style="'+(included?'':'display:none;')+'">' + deepHtml(deepKeyFor(c.id)) +
+      (c.hasQty ? '<div class="qty-line">'+(c.qtyLabel||'antal')+': <input type="number" min="1" value="'+qty+'" data-standalone="'+c.id+'"></div>' : '<p class="hint" style="margin-top:0;">Omfang følger arealets størrelse.</p>') +
+    '</div>';
+
+  bindCheck(card, 'sa-'+c.id, included, function(){
+    const adding = !state.included.has(c.id);
+    adding ? state.included.add(c.id) : state.included.delete(c.id);
+    state.touchedInclude[c.id] = true; state.autoIncluded.delete(c.id);
+    if(adding) (c.excludes||[]).forEach(function(x){ if(state.included.delete(x)){ state.touchedInclude[x]=true; state.autoIncluded.delete(x); } });
+    track('mattle_component_toggle', {component:c.id, included:adding});
+  });
+  const qtyInput = card.querySelector('input[type="number"]');
+  if(qtyInput){
+    qtyInput.addEventListener('click', function(e){ e.stopPropagation(); });
+    qtyInput.addEventListener('input', function(e){
+      state.qty[c.id] = Math.max(1, parseInt(e.target.value||'1',10));
+      renderPackage(); updateCardSub(card, c.id);
+    });
+  }
+  if(!included){
+    const hint = document.createElement('p');
+    hint.className = 'hint';
+    hint.style.padding = '0 18px 16px 55px';
+    hint.textContent = (c.hintFor && c.hintFor(a)) || c.addableHint;
+    card.appendChild(hint);
+  }
+  return card;
+}
+
+/* ---------- package ---------- */
+function collectLineItems(){
+  ensureDefaults();
+  const a = getAnswers();
+  const lines = [];
+  GROUPS.forEach(function(g){
+    if(!g.visibleIf(a) || !state.groupIncluded[g.id]) return;
+    const opts = g.options(a);
+    let optId = state.groupOption[g.id];
+    if(!opts.find(function(o){return o.id===optId;})) optId = opts[0].id;
+    const opt = opts.find(function(o){return o.id===optId;});
+    const qty = g.hasQty ? (state.qty[g.id] ?? g.defaultQty(a)) : g.qty(a);
+    const sp = priceSpan(g.id, opt.price, qty, g.unit, a);
+    lines.push({id:g.id, optId:opt.id, name:g.title, variant:opt.label, qty:qty, unit:g.unit, price:opt.price, subtotal:opt.price*qty,
+      lo:sp.lo, hi:sp.hi, unitLo:sp.unitLo, unitHi:sp.unitHi, drivers:sp.drivers, reason:opt.reason, links:(g.links||[]).concat(opt.links||[])});
+  });
+  STANDALONES.forEach(function(c){
+    if(!c.visibleIf(a) || !state.included.has(c.id)) return;
+    const calc = c.calc(a);
+    const qty = c.hasQty ? (state.qty[c.id] ?? c.defaultQty(a)) : calc.qty;
+    const sp = priceSpan(c.id, calc.price, qty, calc.unit, a);
+    lines.push({id:c.id, optId:null, name:c.name, variant:null, qty:qty, unit:calc.unit, price:calc.price, subtotal:calc.price*qty,
+      lo:sp.lo, hi:sp.hi, unitLo:sp.unitLo, unitHi:sp.unitHi, drivers:sp.drivers, reason:c.fact, links:c.links||[]});
+  });
+  return lines;
+}
+/* ---------- report ---------- */
+/* Dokumenterede værdier fra mattle.dk:
+   Klimavej: >35 % porevolumen, ca. 175 l/m² ved 50 cm opbygning.
+   PermaVoid 85 mm (tag/Blue2Green græsbane): ca. 85 m³ pr. 1.000 m².
+   Ekstremt regnskyl: 190 l/s/ha i 10 min = 11,4 l/m². */
+const RAIN_EVENT_M3_PER_M2 = 190 * 600 / 10000 / 1000;
+function computeMetrics(){
+  const a = getAnswers();
+  const lines = collectLineItems();
+  const line = function(id){ return lines.find(function(l){ return l.id===id; }); };
+  let capacity = 0, basis = [];
+  const rv = line('regnvand');
+  if(rv && (rv.optId==='klimavej' || rv.optId==='klimavej-taet')){ capacity += a.area*0.175; basis.push('Klimavej ca. 175 l/m² ved 50 cm'); }
+  const gt = line('gtag');
+  if(gt && gt.optId==='permavoid'){ capacity += a.area*0.085; basis.push('PermaVoid ca. 85 l/m²'); }
+  const sp = line('sport');
+  if(sp && sp.optId==='graes'){ capacity += a.area*0.085; basis.push('Blue2Green ca. 85 l/m²'); }
+
+  const metrics = [];
+  if(capacity>0){
+    const catchment = a.area + (a.terrain==='tag' ? 0 : a.opland);
+    const events = Math.floor(capacity / (catchment * RAIN_EVENT_M3_PER_M2));
+    metrics.push({v:Math.round(capacity).toLocaleString('da-DK'), u:'m³ magasin', l:'Vandvolumen i den valgte opbygning ('+basis.join(', ')+').', raw:true});
+    metrics.push({v:events.toLocaleString('da-DK'), u:'ekstreme regnskyl', l:'Så mange regnskyl på 190 l/s/ha i 10 minutter fra areal og opland ('+catchment.toLocaleString('da-DK')+' m²) kan magasinet rumme, før der er brug for afløb.', raw:true});
+  } else {
+    metrics.push({v:'–', u:'magasin', l:'Magasinkapaciteten for de valgte løsninger beregnes ved dimensioneringen sammen med Mattle.', raw:true});
+  }
+  const trees = (line('traeer')?line('traeer').qty:0) + (line('eksist')?line('eksist').qty:0);
+  if(trees>0) metrics.push({v:trees, u:'bytræer', l:'Nye og eksisterende træer i pakken, plantet med rodvenlig opbygning og vækstgaranti.'});
+  const green = (gt?a.area:0) + (sp && sp.optId==='graes' ? a.area : 0);
+  if(green>0) metrics.push({v:green, u:'m² grønt', l:'Grønt areal fra tag eller græsbane.'});
+  metrics.push({v:lines.length, u:'komponenter', l:'Løsninger i den samlede pakke, hver med link til mere viden hos Mattle.'});
+  return metrics;
+}
+/* ---------- VIDENSBANK ----------
+   Faglige forklaringer, der vises som "Nørd dybere" undervejs og samles i rapporten.
+   Tal og produktegenskaber er hentet fra mattle.dk. Øvrigt er generel fagpraksis.
+   Alt skal godkendes af Mattle før lancering. */
+const KNOWLEDGE = {
+  trafik:{title:'Sådan dimensioneres et bærelag', sections:[
+    {h:'Sådan virker det', p:'Bærelaget fordeler trykket fra hjulene ned til råjorden. Jo tungere og hyppigere trafikken er, jo tykkere og stivere skal opbygningen være. I vejreglerne inddeles trafikken i trafikklasser ud fra mængden af tung trafik.'},
+    {h:'Det bliver ofte glemt', p:'Arealet skal kunne bære den tungeste trafik, det møder, ikke kun den daglige brug. Tænk byggepladstrafik, renovationsbiler, flyttebiler og brandveje med i dimensioneringen.'},
+    {h:'Sådan kontrolleres det', p:'Bæreevnen kontrolleres typisk med pladebelastningsforsøg, som giver bærelagets E-værdi. Er bunden blød, kan geonet eller geotekstil stabilisere den, så man undgår at grave dybt ud og udskifte jorden.'},
+  ]},
+  jordbund:{title:'Jordbund og nedsivning', sections:[
+    {h:'Sandet og leret jord', p:'Sandet jord har store porer og leder vandet hurtigt væk. Leret jord har små porer, leder vandet langsomt og bliver blød og mindre bæredygtig, når den er våd.'},
+    {h:'Nedsivningstest', p:'Jordens evne til at tage vand måles med en nedsivningstest på stedet, i den dybde anlægget skal ligge. Resultatet afgør, hvor stort et nedsivningsanlæg skal være, eller om vandet skal holdes tilbage i stedet.'},
+    {h:'Myndigheder', p:'Nedsivning af regnvand fra tage og befæstede arealer kræver typisk tilladelse fra kommunen. Kommunen kan stille krav om rensning og om afstand til grundvand, drikkevandsboringer og bygninger.'},
+  ]},
+  grundvand:{title:'Grundvand', sections:[
+    {h:'Hvorfor det betyder noget', p:'Står grundvandet højt, er der ikke plads i jorden til regnvandet, og et nedsivningsanlæg kan stå fyldt med grundvand, netop når det regner meget.'},
+    {h:'Det svinger over året', p:'Grundvandsstanden er typisk højest i vinter- og forårsmånederne. En måling fra sensommeren kan derfor give et for optimistisk billede.'},
+    {h:'Løsningen ved højt grundvand', p:'Magasinet bygges som et tæt bassin med styret afløb. Tomme kassetter i højt grundvand kan få opdrift, så det skal indgå i dimensioneringen.'},
+  ]},
+  regnvand:{title:'Hvor meget vand skal løsningen kunne rumme?', sections:[
+    {h:'Vandmængden', p:'Vandmængden afhænger af regnens intensitet, arealet af alt det, der afvander til løsningen (areal plus opland), og hvor meget af regnen der løber af overfladen. Tage og asfalt leder næsten al regnen videre, mens græs og beplantning holder meget tilbage.'},
+    {h:'Serviceniveau', p:'Hvor kraftig en regn løsningen skal klare, aftales med kommune eller forsyning. Der regnes typisk med et tillæg for fremtidens kraftigere regn.'},
+    {h:'Magasinets volumen', p:'Et magasin kan rumme opbygningens volumen gange dens porevolumen. En klimavej på 50 cm med over 35 % porevolumen kan eksempelvis rumme omkring 175 liter vand pr. m².'},
+  ]},
+  klimavej:{title:'Klimavejen', sections:[
+    {h:'Hvorfor bruge vejen', p:'Vejkassen skal alligevel bygges. Når den bygges som magasin, fylder skybrudssikringen ingen ekstra plads i byen.'},
+    {h:'Åben eller tæt', p:'Klimavejen kan lade vandet sive direkte ned til grundvandet, eller bygges som et tæt bassin, hvor vandet bruges til vanding af bytræer, før overskudsvandet ledes videre.'},
+    {h:'Under udførelsen', p:'Magasinet bygges af EcoBase® og Accorder®, som er kørefaste allerede under udførelsen. Det giver en hurtigere installation.'},
+  ]},
+  traeer:{title:'Hvad et bytræ skal bruge under jorden', sections:[
+    {h:'Konflikten', p:'Rødder skal have ilt, vand og porøs jord. Under en belægning er jorden komprimeret for at kunne bære, og der kan rødderne ikke vokse. Resultatet er træer, der forbliver små, dør tidligt eller løfter belægningen.'},
+    {h:'Løsningen', p:'Rodceller og sandwichopbygninger adskiller de to funktioner. Kassetterne bærer trafikken, så jorden indeni kan forblive løs. Mattles vækstmedier har en naturlig komprimering omkring proctor 85.'},
+    {h:'Detaljerne', p:'Plantebede dybere end 50 cm skal etableres med iltningsrør og dræn. Hvor stort træet bliver, afhænger især af, hvor meget vækstjord rødderne har adgang til.'},
+  ]},
+  eksisterende:{title:'Hvorfor rødder løfter belægningen', sections:[
+    {h:'Mekanismen', p:'Rødder vokser, hvor der er ilt og fugt. Lige under en belægning samles luft og kondensvand, og der vokser rødderne sig tykke og løfter fliser og asfalt.'},
+    {h:'Løsningen', p:'ArborRaft-kassetterne ventileres, så der dannes en iltbarriere. Rødderne vokser derfor i vækstmediet under kassetterne og ikke op i belægningen.'},
+    {h:'Under anlægsarbejdet', p:'Undgå kørsel, oplag og afgravning i træets rodzone uden faglig vejledning. Skader på rødder viser sig ofte først i kronen flere år efter.'},
+  ]},
+  ledninger:{title:'Ledninger og træer', sections:[
+    {h:'Før projekteringen', p:'Ledningsejerregistret (LER) viser, hvilke ledninger der ligger i området. De registrerede placeringer bør verificeres på stedet, før der projekteres træer og magasiner.'},
+    {h:'Krav fra ledningsejere', p:'Ledningsejere kan stille krav om afstand, rodbarrierer og adgang til reparation. Det påvirker, hvor træer og kassetter kan placeres.'},
+    {h:'Valg af system', p:'TreeParker er designet, så ledninger kan føres igennem og repareres, og kan justeres i højden fra 20 til 150 cm.'},
+  ]},
+  vejvand:{title:'Vejvand og rensning', sections:[
+    {h:'Hvad vejvand indeholder', p:'Vand fra veje og parkeringspladser indeholder blandt andet tungmetaller fra dæk- og bremseslid, olie og fine partikler.'},
+    {h:'Separatkloak', p:'Ved separatkloak ledes regnvandet ofte direkte til vandløb, søer eller havet. Derfor stiller myndighederne typisk krav om rensning før udledning.'},
+    {h:'Løsninger', p:'INNOLET® monteres i eksisterende vejbrønde og renser vandet, før det ledes videre. D-Rainclean® er en filterjord, der renser vandet i regnbede.'},
+  ]},
+  salt:{title:'Vejsalt og beplantning', sections:[
+    {h:'Skaden', p:'Vintersaltning giver svidningsskader på træer og planter langs veje. Saltværn beskytter ikke mod salttåge, og alternative tømidler virker dårligere eller koster mere.'},
+    {h:'Løsningen', p:'PERLHUMUS® i vækstjorden binder saltets metal-ioner og frigiver kloriden, så saltmolekylet brydes. Det afbøder de høje saltkoncentrationer efter vintersaltning.'},
+    {h:'Ekstra gevinst', p:'Den høje bufferkapacitet frigiver næringsstoffer langsomt og binder tungmetaller, så de ikke udvaskes til grundvandet.'},
+  ]},
+  tag:{title:'Grønne og blå tage', sections:[
+    {h:'Bæreevne', p:'Tagets vægt skal vurderes i vandmættet tilstand og sammen med snelast. En statiker bør vurdere bæreevnen tidligt, før tagtypen vælges.'},
+    {h:'Membranen', p:'Tagmembranen skal være rodfast, så rødder ikke kan trænge igennem og skade tagets tæthed.'},
+    {h:'Vandhåndtering', p:'I PermaVoid-systemet kan vandstanden styres med overløb eller sensorer. Mattles letvægts-tagjord holder vægten nede, og et tag på 1.000 m² kan rumme omkring 85 m³ vand.'},
+  ]},
+  permeabel:{title:'Permeable belægninger', sections:[
+    {h:'Sådan virker det', p:'Regnvandet siver gennem belægningen ned i et vandførende bærelag i stedet for at løbe til kloak. Permaweb fungerer som buffer under belægningen.'},
+    {h:'Drift', p:'Fuger og overflade kan over tid stoppe til med finstof. Planlæg regelmæssig fejning eller sugning, så belægningen bliver ved med at lede vand.'},
+    {h:'Under anlægget', p:'Beskyt belægningen mod jord og sand fra byggepladsen, indtil området er færdigt. Tilstoppede fuger fra anlægsfasen er svære at rense bagefter.'},
+  ]},
+  sport:{title:'Regnvand under sportsbaner', sections:[
+    {h:'Princippet', p:'Regnvandet opmagasineres i bærelaget under banen og gives tilbage til græsset via kapillærvirkning i tørre perioder.'},
+    {h:'Kapacitet', p:'Med Blue2Green-konceptet kan en bane på 8.000 m² rumme omkring 680 m³ vand.'},
+    {h:'Valg af bane', p:'Kunststof giver en ensartet flade til intensiv brug året rundt. Græs giver mere grønt og biodiversitet, men kræver løbende drift.'},
+  ]},
+  vanding:{title:'Kapillær vanding', sections:[
+    {h:'Princippet', p:'Regnvandet samles i et magasin under planterne og trækkes op til rødderne nedefra, som i en væge, uden pumper eller ventiler.'},
+    {h:'Fordelen', p:'Jordoverfladen holdes tør, så mindre vand fordamper. Uafhængig forskning har vist vandingsbesparelser på op til 60 % med PermaVoid-kapillærsystemet.'},
+    {h:'Etableringsårene', p:'De første år efter plantning er træerne mest sårbare over for tørke. Stabil vandtilførsel i den periode afgør ofte, om træet etablerer sig.'},
+  ]},
+};
+/* Hvilken viden hører til hvilke svar og komponenter */
+function knowledgeKeysFor(a){
+  const keys = [];
+  const add = function(k){ if(KNOWLEDGE[k] && keys.indexOf(k)<0) keys.push(k); };
+  if(a.terrain!=='tag') add('trafik');
+  if(a.challenges.has('skybrud')) add('regnvand');
+  if(a.regnvandsmetode==='klimavej' || regnvandOpt()==='klimavej-taet') add('klimavej');
+  if(a.jordbund || a.regnvandsmetode==='nedsivning') add('jordbund');
+  if(a.grundvand==='hoejt' || a.regnvandsmetode==='nedsivning') add('grundvand');
+  if(a.challenges.has('bytraeer')) add('traeer');
+  if(a.challenges.has('eksisterende')) add('eksisterende');
+  if(a.ledninger==='mange' || a.ledninger==='ukendt') add('ledninger');
+  if(a.challenges.has('forurening') || a.afloeb==='separat') add('vejvand');
+  if(a.saltning==='ja') add('salt');
+  if(a.terrain==='tag') add('tag');
+  if(state.included.has('permeabel')) add('permeabel');
+  if(a.terrain==='sport') add('sport');
+  if(state.included.has('vanding')) add('vanding');
+  return keys;
+}
+function deepHtml(key){
+  const k = KNOWLEDGE[key]; if(!k) return '';
+  return '<details class="deep" data-deep="'+key+'"><summary>Nørd dybere: '+k.title+'</summary><div class="deep-body">' +
+    k.sections.map(function(s){ return '<h5>'+s.h+'</h5><p>'+s.p+'</p>'; }).join('') + '</div></details>';
+}
+function mountStaticDeep(){
+  document.querySelectorAll('[data-deep-slot]').forEach(function(slot){
+    slot.innerHTML = deepHtml(slot.getAttribute('data-deep-slot'));
+    const d = slot.querySelector('details');
+    if(d) d.addEventListener('toggle', function(){ if(d.open) track('mattle_knowledge_open', {topic:slot.getAttribute('data-deep-slot')}); });
+  });
+}
+
+/* ---------- FAGTIPS ----------
+   Prioriteret liste. De tre første, der passer til projektet, vises over prisen. */
+const TIPS = [
+  {id:'nedsivningstest', when:a=>(a.regnvandsmetode==='nedsivning' || regnvandOpt()==='lar') && a.jordbund!=='sand',
+    h:'Få lavet en nedsivningstest, før løsningen låses', p:'I har valgt nedsivning, men jordbunden er '+'ikke dokumenteret egnet. En nedsivningstest på stedet afgør, om vandet kan sive ned, eller om magasinet skal bygges tæt. Testen koster lidt i forhold til at bygge den forkerte løsning.'},
+  {id:'grundvand-tæt', when:a=>a.grundvand==='hoejt' && a.challenges.has('skybrud'),
+    h:'Regn med opdrift og tæt magasin ved højt grundvand', p:'Højt grundvand betyder, at magasinet skal holde grundvandet ude og ikke må løfte sig, når det står tomt. Det skal med i dimensioneringen fra start.'},
+  {id:'serviceniveau', when:a=>a.challenges.has('skybrud'),
+    h:'Aftal serviceniveauet med kommune eller forsyning tidligt', p:'Hvor kraftig en regn løsningen skal klare, og om oplandet skal med, styrer magasinets størrelse og pris mere end noget andet. Få kravet på skrift, før der projekteres.'},
+  {id:'ler', when:a=>a.ledninger==='mange' || (a.ledninger==='ukendt' && (a.challenges.has('bytraeer')||a.challenges.has('eksisterende'))),
+    h:'Lav en ledningsforespørgsel, før træerne placeres', p:'Ledninger i jorden er den hyppigste grund til, at træer må flyttes eller droppes sent i projektet. Tjek Ledningsejerregistret, og verificér placeringerne på stedet.'},
+  {id:'rodzone', when:a=>a.challenges.has('eksisterende'),
+    h:'Beskyt rodzonen, mens der arbejdes', p:'Kørsel, oplag og afgravning under kronen kan skade træerne mere end selve renoveringen. Afmærk rodzonen, og lad arbejdet omkring rødderne udføre skånsomt.'},
+  {id:'vaekstjord', when:a=>a.challenges.has('bytraeer'),
+    h:'Træets størrelse afgøres af jorden, ikke af planteskolen', p:'Et stort træ i et lille plantehul bliver aldrig stort. Sikr, at rødderne har adgang til løs vækstjord under belægningen, og at bede over 50 cm får iltning og dræn.'},
+  {id:'statiker', when:a=>a.terrain==='tag',
+    h:'Få en statiker til at vurdere taget i vandmættet tilstand', p:'Et grønt tag vejer mest, når det er gennemvådt og har sne på. Den vægt afgør, hvilken tagtype der overhovedet er mulig, så vurderingen skal ligge før valget.'},
+  {id:'byggeplads', when:a=>a.trafik==='tung' || (a.traffic && a.challenges.has('skybrud')),
+    h:'Dimensionér til den tungeste trafik, også under byggeriet', p:'Lastbiler og maskiner i anlægsfasen belaster bærelag og magasin mere end den daglige brug. Vælg løsninger, der kan tåle det, eller planlæg køreveje uden om.'},
+  {id:'rensning', when:a=>a.afloeb==='separat' && a.traffic,
+    h:'Afklar kravene til rensning før udledning', p:'Ved separatkloak ender vejvandet i naturen. Kommunen stiller typisk krav om rensning, og det er langt billigere at bygge rensningen ind fra start end at eftermontere den.'},
+  {id:'salt', when:a=>a.saltning==='ja' && (a.challenges.has('bytraeer')||a.challenges.has('eksisterende')||a.challenges.has('groent')),
+    h:'Beskyt rødderne mod vejsalt', p:'Saltskader viser sig ofte først efter et par vintre, når træerne allerede er svækket. Et salttolerant vækstmedie er en lille merudgift ved anlæg.'},
+  {id:'drift-permeabel', when:a=>state.included.has('permeabel'),
+    h:'Planlæg driften af den permeable belægning', p:'Tilstoppede fuger får belægningen til at virke som almindelig asfalt. Aftal fejning eller sugning i driftsbudgettet, og beskyt fugerne mod byggepladsjord.'},
+  {id:'etablering', when:a=>a.challenges.has('bytraeer') && a.vanding!=='kapillaer',
+    h:'Sørg for vand i etableringsårene', p:'Nyplantede træer er mest sårbare de første år. Uden kapillær vanding skal der ligge en plan for vanding i tørre perioder.'},
+  {id:'tidlig', when:a=>a.fase==='ide' || !a.fase,
+    h:'Tag løsningen under jorden med i de første skitser', p:'Valget af magasin, bærelag og rodsystem styrer koter, afgravning og placering af træer. Jo tidligere det er med, jo færre ændringer koster det senere.'},
+  {id:'jordbund-ukendt', when:a=>a.jordbund==='ukendt' || !a.jordbund,
+    h:'Få styr på jordbunden tidligt', p:'Ukendt jordbund er den største usikkerhed i både løsning og pris. En geoteknisk undersøgelse gør spændet i overslaget langt smallere.'},
+];
+function pickTips(a){
+  return TIPS.filter(function(t){ try{ return t.when(a); }catch(e){ return false; } }).slice(0,3);
+}
+
+/* ---------- PRISSPÆND ----------
+   Hver komponent har en basispris pr. enhed (i GROUPS/STANDALONES).
+   Spændet udvides af lokale forhold. ALLE tal er eksempler og skal erstattes af Mattles priser. */
+const SPAN_BASE = {lo:0.85, hi:1.2};
+function priceDrivers(id, a){
+  const d = [{t:'Adgangsforhold, logistik og tidsplan på pladsen', hi:0}];
+  const add = function(t, hi){ d.push({t:t, hi:hi}); };
+  const soilUnknown = !a.jordbund || a.jordbund==='ukendt';
+  if(id==='baerelag'){
+    if(a.jordbund==='ler') add('Leret eller blød bund kan kræve stabilisering', 0.2);
+    else if(soilUnknown) add('Jordbunden er ikke undersøgt endnu', 0.1);
+    if(a.trafik==='tung') add('Tung trafik kræver kraftigere opbygning og kontrol', 0.05);
+  }
+  if(id==='regnvand'){
+    if(a.jordbund==='ler' || a.grundvand==='hoejt') add('Jord eller grundvand kan kræve et tæt magasin', 0.2);
+    else if(soilUnknown || a.grundvand==='ukendt' || !a.grundvand) add('Jordbund og grundvand er ikke afklaret', 0.15);
+    if(a.opland > a.area) add('Et stort opland øger det nødvendige magasinvolumen', 0.25);
+    if(a.trafik==='tung') add('Magasinet skal dimensioneres til tung trafik', 0.1);
+  }
+  if(id==='traeer' || id==='eksist' || id==='vanding' || id==='rodsikring'){
+    if(a.ledninger==='mange') add('Ledninger i jorden kræver tilpasning af opbygningen', 0.2);
+    else if(a.ledninger==='ukendt' || !a.ledninger) add('Ledningsforholdene er ikke afklaret', 0.1);
+  }
+  if(id==='eksist') add('Arbejde omkring eksisterende rødder udføres skånsomt og delvist i hånden', 0.15);
+  if(id==='gtag') add('Tagets bæreevne og adgang med kran eller løft', 0.15);
+  if(id==='sport') add('Terrænregulering og afvanding af banen', 0.1);
+  if(id==='rensning') add('Antal og stand af eksisterende vejbrønde', 0.1);
+  if(id==='permeabel' || id==='forstaerkning') add('Stand af eksisterende belægning og underlag', 0.1);
+  return d;
+}
+function priceSpan(id, unitPrice, qty, unit, a){
+  const drivers = priceDrivers(id, a);
+  let hi = SPAN_BASE.hi + drivers.reduce(function(s,x){ return s + x.hi; }, 0);
+  let lo = SPAN_BASE.lo;
+  if(unit==='m²' && a.area < 200){ hi += 0.15; drivers.push({t:'Små arealer har højere pris pr. m²', hi:0.15}); }
+  if(unit==='m²' && a.area > 2000){ lo -= 0.05; drivers.push({t:'Store arealer giver stordriftsfordele', hi:0}); }
+  const round10 = function(n){ return Math.round(n/10)*10; };
+  return {
+    unitLo: round10(unitPrice*lo), unitHi: round10(unitPrice*hi),
+    lo: unitPrice*lo*qty, hi: unitPrice*hi*qty,
+    drivers: drivers,
+  };
+}
+function formatSpan(lo, hi, step){
+  step = step || 1000;
+  const r = function(n, f){ return f(n/step)*step; };
+  return r(lo, Math.floor).toLocaleString('da-DK')+'–'+r(hi, Math.ceil).toLocaleString('da-DK')+' kr.';
+}
+function formatUnitSpan(lo, hi, unit){
+  return lo.toLocaleString('da-DK')+'–'+hi.toLocaleString('da-DK')+' kr./'+unit;
+}
+
+function renderPackage(){
+  const a = getAnswers();
+  const lines = collectLineItems();
+  const tips = pickTips(a);
+  document.getElementById('fagtips').innerHTML = tips.length ? tips.map(function(t, i){
+    return '<article class="tip"><span class="tip-n">'+(i+1)+'</span><div><h4>'+t.h+'</h4><p>'+t.p+'</p></div></article>';
+  }).join('') : '';
+  document.getElementById('fagtips-wrap').hidden = tips.length===0;
+
+  const body = document.getElementById('package-body');
+  body.innerHTML = lines.map(function(l, i){
+    return '<tr class="pkg-row"><td><button type="button" class="row-toggle" aria-expanded="false" aria-controls="drv-'+i+'"><span class="comp-name">'+l.name.replace(/<[^>]+>/g,'')+'</span>'+(l.variant?'<span class="variant">'+l.variant.replace(/<[^>]+>/g,'')+'</span>':'')+'</button></td>' +
+      '<td>'+l.qty.toLocaleString('da-DK')+' '+l.unit+'</td>' +
+      '<td>'+formatSpan(l.lo, l.hi, l.hi>100000?5000:1000)+'<div class="variant">'+formatUnitSpan(l.unitLo, l.unitHi, l.unit)+'</div></td></tr>' +
+      '<tr class="drv-row" id="drv-'+i+'" hidden><td colspan="3"><span class="drv-h">Det afhænger af</span><ul>'+l.drivers.map(function(d){ return '<li>'+d.t+'</li>'; }).join('')+'</ul></td></tr>';
+  }).join('');
+  body.querySelectorAll('.row-toggle').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      const row = document.getElementById(btn.getAttribute('aria-controls'));
+      const open = row.hidden; row.hidden = !open; btn.setAttribute('aria-expanded', String(open));
+    });
+  });
+  const lo = lines.reduce(function(s,l){ return s+l.lo; }, 0), hi = lines.reduce(function(s,l){ return s+l.hi; }, 0);
+  document.getElementById('package-total').textContent = lines.length ? formatSpan(lo, hi, hi>1000000?25000:5000) : '–';
+  const uncertain = [];
+  if(!a.jordbund || a.jordbund==='ukendt') uncertain.push('jordbunden');
+  if(a.challenges.has('skybrud') && (!a.grundvand || a.grundvand==='ukendt')) uncertain.push('grundvandet');
+  if((a.challenges.has('bytraeer')||a.challenges.has('eksisterende')) && (!a.ledninger || a.ledninger==='ukendt')) uncertain.push('ledningerne');
+  document.getElementById('span-note').textContent = uncertain.length
+    ? 'Spændet er bredt, fordi '+uncertain.join(', ').replace(/, ([^,]*)$/,' og $1')+' ikke er afklaret endnu. Jo mere der er kendt om de lokale forhold, jo smallere bliver spændet.'
+    : 'Spændet afspejler de lokale forhold, du har beskrevet. Den endelige pris fastlægges ved projektering.';
+}
+
+/* ---------- PLACERING: kort, indtegning og skråfotos ----------
+   Kræver hosting med serverfunktionerne i /api (token ligger på serveren, aldrig i browseren).
+   Kort: Ortofoto forår (Klimadatastyrelsen via Dataforsyningen). Skråfotos: Skråfoto STAC API v2. */
+const LIBS = {
+  leafletCss:'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css',
+  leaflet:'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js',
+  proj4:'https://cdn.jsdelivr.net/npm/proj4@2.12.1/dist/proj4.js',
+  geotiff:'https://cdn.jsdelivr.net/npm/geotiff@2.1.3/dist-browser/geotiff.js',
+};
+const DIRECTIONS = [
+  {id:'north', label:'Set mod nord'}, {id:'east', label:'Set mod øst'},
+  {id:'south', label:'Set mod syd'}, {id:'west', label:'Set mod vest'},
+];
+const MAPX = {checked:false, available:false, leads:false, map:null, layer:null, line:null, poly:null, marker:null,
+  drawing:false, pts:[], photoJob:0};
+state.location = null;   // {address, lat, lon, x, y, polygon:[[lat,lon]], areaDrawn}
+state.photos = {};       // {north:dataURL, ...}
+
+function loadScript(src){ return new Promise(function(res, rej){ const s=document.createElement('script'); const to=setTimeout(function(){ rej(new Error('timeout')); }, 15000); s.src=src; s.onload=function(){ clearTimeout(to); res(); }; s.onerror=function(e){ clearTimeout(to); rej(e); }; document.head.appendChild(s); }); }
+function loadCss(href){ const l=document.createElement('link'); l.rel='stylesheet'; l.href=href; document.head.appendChild(l); }
+
+async function checkConfig(){
+  if(MAPX.checked) return;
+  MAPX.checked = true;
+  try{
+    const r = await fetch('/api/config', {cache:'no-store'});
+    if(r.ok){ const c = await r.json(); MAPX.available = !!c.maps; MAPX.leads = !!c.leads; }
+  }catch(e){ MAPX.available = false; }
+  applyLeadMode();
+}
+async function initPlacering(){
+  await checkConfig();
+  document.getElementById('map-ready').hidden = !MAPX.available;
+  document.getElementById('map-unavailable').hidden = MAPX.available;
+  if(!MAPX.available || MAPX.map) { if(MAPX.map) setTimeout(function(){ MAPX.map.invalidateSize(); }, 50); return; }
+  try{
+    loadCss(LIBS.leafletCss);
+    await Promise.all([loadScript(LIBS.leaflet), loadScript(LIBS.proj4)]);
+    proj4.defs('EPSG:25832', '+proj=utm +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs');
+    buildMap();
+  }catch(e){
+    MAPX.available = false;
+    document.getElementById('map-ready').hidden = true;
+    document.getElementById('map-unavailable').hidden = false;
+  }
+}
+function buildMap(){
+  const map = L.map('map', {center:[56.1, 10.4], zoom:7, minZoom:6, maxZoom:21, zoomControl:true});
+  L.tileLayer('/tiles/{z}/{x}/{y}', {maxZoom:21, maxNativeZoom:19, attribution:'Ortofoto © Klimadatastyrelsen, Dataforsyningen'}).addTo(map);
+  map.on('click', function(e){ if(MAPX.drawing) addVertex(e.latlng); });
+  MAPX.map = map;
+  if(state.location && state.location.polygon){ restoreDrawing(); }
+  bindSearch();
+}
+function toUTM(lat, lon){ return proj4('EPSG:4326', 'EPSG:25832', [lon, lat]); }
+function polygonAreaM2(pts){
+  const p = pts.map(function(ll){ return toUTM(ll[0], ll[1]); });
+  let s = 0;
+  for(let i=0;i<p.length;i++){ const j=(i+1)%p.length; s += p[i][0]*p[j][1] - p[j][0]*p[i][1]; }
+  return Math.abs(s)/2;
+}
+
+/* ---- adressesøgning ---- */
+function bindSearch(){
+  const input = document.getElementById('addr-input'), list = document.getElementById('addr-results');
+  let timer = null, seq = 0;
+  input.addEventListener('input', function(){
+    clearTimeout(timer);
+    const q = input.value.trim();
+    if(q.length < 3){ list.innerHTML=''; return; }
+    timer = setTimeout(async function(){
+      const my = ++seq;
+      try{
+        const r = await fetch('/api/adresse?q='+encodeURIComponent(q));
+        const data = await r.json();
+        if(my!==seq) return;
+        list.innerHTML = (data.results||[]).map(function(x, i){
+          return '<li><button type="button" class="addr-opt" data-i="'+i+'">'+x.label+'</button></li>';
+        }).join('') || '<li class="addr-empty">Ingen adresser fundet</li>';
+        list.querySelectorAll('.addr-opt').forEach(function(b){
+          b.addEventListener('click', function(){ pickAddress(data.results[+b.dataset.i]); list.innerHTML=''; input.value = data.results[+b.dataset.i].label; });
+        });
+      }catch(e){ list.innerHTML = '<li class="addr-empty">Søgningen er ikke tilgængelig lige nu</li>'; }
+    }, 250);
+  });
+}
+function pickAddress(res){
+  const xy = toUTM(res.lat, res.lon);
+  state.location = {address:res.label, lat:res.lat, lon:res.lon, x:xy[0], y:xy[1], polygon:null, areaDrawn:null};
+  MAPX.map.setView([res.lat, res.lon], 19);
+  if(MAPX.marker) MAPX.marker.remove();
+  MAPX.marker = L.circleMarker([res.lat, res.lon], {radius:6, color:'#fff', weight:2, fillColor:'#2A8BC4', fillOpacity:1}).addTo(MAPX.map);
+  clearDrawing(); startDrawing();
+  track('mattle_location_selected', {});
+  loadPhotos();
+}
+
+/* ---- indtegning ---- */
+function startDrawing(){
+  MAPX.drawing = true; MAPX.pts = [];
+  document.getElementById('map').classList.add('drawing');
+  setDrawStatus('Klik på luftfotoet for at sætte hjørnerne af arealet. Klik på det første punkt, eller tryk "Afslut areal", når du er færdig.');
+  updateDrawButtons();
+}
+function addVertex(ll){
+  if(MAPX.pts.length>=3){
+    const first = MAPX.map.latLngToContainerPoint(MAPX.pts[0]), now = MAPX.map.latLngToContainerPoint(ll);
+    if(first.distanceTo(now) < 14){ finishDrawing(); return; }
+  }
+  MAPX.pts.push(ll);
+  redrawLine(); updateDrawButtons();
+}
+function removeSketch(){
+  if(MAPX.line){ MAPX.line.remove(); MAPX.line=null; }
+  if(MAPX.vtx){ MAPX.vtx.clearLayers(); }
+}
+function redrawLine(){
+  removeSketch();
+  if(!MAPX.vtx) MAPX.vtx = L.layerGroup().addTo(MAPX.map);
+  MAPX.line = L.polyline(MAPX.pts, {color:'#86BC3F', weight:3, dashArray:'6 6'}).addTo(MAPX.map);
+  MAPX.pts.forEach(function(p, i){ L.circleMarker(p, {radius:i===0?7:4, color:'#fff', weight:2, fillColor:'#86BC3F', fillOpacity:1, interactive:false}).addTo(MAPX.vtx); });
+}
+function undoVertex(){ MAPX.pts.pop(); redrawLine(); updateDrawButtons(); }
+function finishDrawing(){
+  if(MAPX.pts.length < 3) return;
+  MAPX.drawing = false;
+  document.getElementById('map').classList.remove('drawing');
+  const pts = MAPX.pts.map(function(p){ return [p.lat, p.lng]; });
+  drawPolygon(pts);
+  const area = Math.round(polygonAreaM2(pts));
+  let cx=0, cy=0; pts.forEach(function(p){ cx+=p[0]; cy+=p[1]; }); cx/=pts.length; cy/=pts.length;
+  const xy = toUTM(cx, cy);
+  state.location = Object.assign(state.location || {address:null}, {polygon:pts, areaDrawn:area, lat:cx, lon:cy, x:xy[0], y:xy[1]});
+  state.area = Math.max(10, area);
+  setDrawStatus('Arealet er tegnet: '+area.toLocaleString('da-DK')+' m². Du kan justere tallet senere.');
+  track('mattle_area_drawn', {area_bucket: area<500?'<500':area<2000?'500-2000':'>2000'});
+  updateDrawButtons();
+  loadPhotos();
+}
+function drawPolygon(pts){
+  removeSketch();
+  if(MAPX.poly) MAPX.poly.remove();
+  MAPX.poly = L.polygon(pts, {color:'#86BC3F', weight:3, fillColor:'#86BC3F', fillOpacity:.25}).addTo(MAPX.map);
+}
+function clearDrawing(){
+  removeSketch();
+  if(MAPX.poly){ MAPX.poly.remove(); MAPX.poly=null; }
+  MAPX.pts = [];
+  if(state.location){ state.location.polygon = null; state.location.areaDrawn = null; }
+  updateDrawButtons();
+}
+function redrawArea(){ clearDrawing(); startDrawing(); }
+function restoreDrawing(){
+  drawPolygon(state.location.polygon);
+  MAPX.map.fitBounds(MAPX.poly.getBounds(), {maxZoom:19});
+  setDrawStatus('Arealet er tegnet: '+state.location.areaDrawn.toLocaleString('da-DK')+' m².');
+  updateDrawButtons();
+}
+function setDrawStatus(t){ document.getElementById('draw-status').textContent = t; }
+function updateDrawButtons(){
+  const has = !!state.location;
+  document.getElementById('btn-undo').disabled = !(MAPX.drawing && MAPX.pts.length);
+  document.getElementById('btn-finish').disabled = !(MAPX.drawing && MAPX.pts.length>=3);
+  document.getElementById('btn-redraw').disabled = !has;
+}
+
+/* ---- skråfotos ---- */
+function getImageXY(item, X, Y, Z){
+  const P = item.properties, io = P['pers:interior_orientation'];
+  const xx0=io.principal_point_offset[0], yy0=io.principal_point_offset[1], ci=io.focal_length, pix=io.pixel_spacing[0];
+  const dimXi=io.sensor_array_dimensions[0], dimYi=io.sensor_array_dimensions[1];
+  const X0=P['pers:perspective_center'][0], Y0=P['pers:perspective_center'][1], Z0=P['pers:perspective_center'][2];
+  const r = function(d){ return d*Math.PI/180; };
+  const o=r(P['pers:omega']), p=r(P['pers:phi']), k=r(P['pers:kappa']);
+  const c=-ci, dimX=-(dimXi*pix/2), dimY=-(dimYi*pix/2);
+  const D11=Math.cos(p)*Math.cos(k), D12=-Math.cos(p)*Math.sin(k), D13=Math.sin(p);
+  const D21=Math.cos(o)*Math.sin(k)+Math.sin(o)*Math.sin(p)*Math.cos(k), D22=Math.cos(o)*Math.cos(k)-Math.sin(o)*Math.sin(p)*Math.sin(k), D23=-Math.sin(o)*Math.cos(p);
+  const D31=Math.sin(o)*Math.sin(k)-Math.cos(o)*Math.sin(p)*Math.cos(k), D32=Math.sin(o)*Math.cos(k)+Math.cos(o)*Math.sin(p)*Math.sin(k), D33=Math.cos(o)*Math.cos(p);
+  const den = D13*(X-X0)+D23*(Y-Y0)+D33*(Z-Z0);
+  const xd = -c*((D11*(X-X0)+D21*(Y-Y0)+D31*(Z-Z0))/den);
+  const yd = -c*((D12*(X-X0)+D22*(Y-Y0)+D32*(Z-Z0))/den);
+  return [((xd-xx0)+dimX)*-1/pix, ((yd-yy0)+dimY)*-1/pix];
+}
+async function loadPhotos(){
+  if(!state.location) return;
+  const job = ++MAPX.photoJob;
+  const grid = document.getElementById('photo-grid');
+  document.getElementById('photos-wrap').hidden = false;
+  grid.innerHTML = DIRECTIONS.map(function(d){
+    return '<figure class="photo" id="photo-'+d.id+'"><div class="photo-frame"><span class="photo-msg">Henter skråfoto…</span></div><figcaption>'+d.label+'</figcaption></figure>';
+  }).join('');
+  state.photos = {};
+  if(typeof GeoTIFF==='undefined'){
+    try{ await loadScript(LIBS.geotiff); }catch(e){ grid.querySelectorAll('.photo-msg').forEach(function(m){ m.textContent='Skråfotos kunne ikke indlæses'; }); return; }
+  }
+  const loc = state.location;
+  await Promise.all(DIRECTIONS.map(async function(d){
+    const fig = document.getElementById('photo-'+d.id);
+    try{
+      const r = await fetch('/api/skraafoto?x='+loc.x.toFixed(2)+'&y='+loc.y.toFixed(2)+'&direction='+d.id);
+      const item = await r.json();
+      if(job!==MAPX.photoJob) return;
+      if(!r.ok || !item || !item.href){ fig.querySelector('.photo-msg').textContent = 'Intet skråfoto fundet her'; return; }
+      const url = await renderPhoto(item, loc, fig);
+      if(job!==MAPX.photoJob) return;
+      state.photos[d.id] = url;
+      const yr = item.datetime ? new Date(item.datetime).getFullYear() : '';
+      fig.querySelector('figcaption').textContent = d.label + (yr?' · '+yr:'');
+    }catch(e){
+      if(job===MAPX.photoJob) fig.querySelector('.photo-msg').textContent = 'Skråfotoet kunne ikke hentes';
+    }
+  }));
+}
+async function renderPhoto(item, loc, fig){
+  const tiff = await GeoTIFF.fromUrl(item.href);
+  const full = await tiff.getImage(0);
+  const W = full.getWidth(), H = full.getHeight();
+  const Z = 0; // Terrænkote ukendt: punktet placeres omtrentligt i billedet
+  const center = getImageXY(item, loc.x, loc.y, Z);
+  let pts = null, half = 450;
+  if(loc.polygon){
+    pts = loc.polygon.map(function(ll){ const u = toUTM(ll[0], ll[1]); return getImageXY(item, u[0], u[1], Z); });
+    const xs = pts.map(function(p){return p[0];}), ys = pts.map(function(p){return p[1];});
+    half = Math.max(350, (Math.max.apply(null,xs)-Math.min.apply(null,xs))*0.9, (Math.max.apply(null,ys)-Math.min.apply(null,ys))*0.9);
+  }
+  const outW = 640, outH = 440, aspect = outW/outH;
+  let hw = half*aspect, hh = half;
+  let x0 = Math.round(center[0]-hw), y0 = Math.round(center[1]-hh), x1 = Math.round(center[0]+hw), y1 = Math.round(center[1]+hh);
+  if(x1<0 || y1<0 || x0>W || y0>H) throw new Error('outside');
+  x0=Math.max(0,x0); y0=Math.max(0,y0); x1=Math.min(W,x1); y1=Math.min(H,y1);
+  // vælg den mindste oversigt, der stadig giver fuld opløsning i udsnittet
+  const count = await tiff.getImageCount();
+  let img = full, scale = 1;
+  for(let i=count-1;i>=1;i--){
+    const ov = await tiff.getImage(i); const s = ov.getWidth()/W;
+    if((x1-x0)*s >= outW*0.9){ img = ov; scale = s; break; }
+  }
+  const win = [Math.floor(x0*scale), Math.floor(y0*scale), Math.ceil(x1*scale), Math.ceil(y1*scale)];
+  const cw = Math.round(outW*(x1-x0)/(2*hw)), ch = Math.round(outH*(y1-y0)/(2*hh));
+  const rgb = await img.readRGB({window:win, width:cw, height:ch, interleave:true});
+  const canvas = document.createElement('canvas'); canvas.width = cw; canvas.height = ch;
+  const ctx = canvas.getContext('2d'), data = ctx.createImageData(cw, ch);
+  for(let i=0, j=0; i<rgb.length; i+=3, j+=4){ data.data[j]=rgb[i]; data.data[j+1]=rgb[i+1]; data.data[j+2]=rgb[i+2]; data.data[j+3]=255; }
+  ctx.putImageData(data, 0, 0);
+  const tx = function(p){ return [(p[0]-x0)*cw/(x1-x0), (p[1]-y0)*ch/(y1-y0)]; };
+  if(pts){
+    ctx.beginPath(); pts.map(tx).forEach(function(p,i){ i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]); }); ctx.closePath();
+    ctx.fillStyle='rgba(134,188,63,.22)'; ctx.fill(); ctx.lineWidth=3; ctx.strokeStyle='#86BC3F'; ctx.setLineDash([8,6]); ctx.stroke();
+  } else {
+    const c = tx(center); ctx.beginPath(); ctx.arc(c[0], c[1], 8, 0, Math.PI*2); ctx.fillStyle='#2A8BC4'; ctx.fill(); ctx.lineWidth=3; ctx.strokeStyle='#fff'; ctx.stroke();
+  }
+  const frame = fig.querySelector('.photo-frame'); frame.innerHTML = '';
+  canvas.setAttribute('role','img'); canvas.setAttribute('aria-label', fig.querySelector('figcaption').textContent+' over projektområdet');
+  frame.appendChild(canvas);
+  return canvas.toDataURL('image/jpeg', 0.82);
+}
+function skipPlacering(){ track('mattle_location_skipped', {}); goTo('terrain'); }
+
+/* ---------- RAPPORT ---------- */
+const LABELS = {
+  terrain:Object.fromEntries(TERRAIN_OPTIONS.map(function(o){return [o.id,o.t];})),
+  traffic:Object.fromEntries(TRAFFIC_OPTIONS.map(function(o){return [o.id,o.t];})),
+  jordbund:Object.fromEntries(JORDBUND_OPTIONS.map(function(o){return [o.id,o.t];})),
+  grundvand:Object.fromEntries(GRUNDVAND_OPTIONS.map(function(o){return [o.id,o.t];})),
+  ledninger:Object.fromEntries(LEDNINGER_OPTIONS.map(function(o){return [o.id,o.t];})),
+  afloeb:Object.fromEntries(AFLOEB_OPTIONS.map(function(o){return [o.id,o.t];})),
+  saltning:Object.fromEntries(SALTNING_OPTIONS.map(function(o){return [o.id,o.t];})),
+  rolle:Object.fromEntries(ROLLE_OPTIONS.map(function(o){return [o.id,o.t];})),
+  fase:Object.fromEntries(FASE_OPTIONS.map(function(o){return [o.id,o.t];})),
+  challenge:Object.fromEntries(CHALLENGE_OPTIONS.map(function(o){return [o.id,o.t];})),
+  regnvandsmetode:Object.fromEntries(REGNVANDSMETODE_OPTIONS.map(function(o){return [o.id,o.t];})),
+};
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+function strip(s){ return String(s||'').replace(/<[^>]+>/g,''); }
+function lbl(group, id){ return id ? (LABELS[group][id] || id) : 'Ikke angivet'; }
+
+function buildReportData(){
+  const a = getAnswers(), lines = collectLineItems();
+  const lo = lines.reduce(function(s,l){return s+l.lo;},0), hi = lines.reduce(function(s,l){return s+l.hi;},0);
+  return {
+    date: new Date().toLocaleDateString('da-DK'),
+    location: state.location, photos: state.photos,
+    facts: [
+      ['Adresse', state.location && state.location.address ? state.location.address : 'Ikke angivet'],
+      ['Areal', a.area.toLocaleString('da-DK')+' m²'+(state.location && state.location.areaDrawn ? ' (indtegnet på kort)' : '')],
+      ['Arealtype', lbl('terrain', a.terrain)],
+      ['Rolle', lbl('rolle', a.rolle)], ['Projektfase', lbl('fase', a.fase)],
+    ],
+    conditions: [
+      ['Udfordringer', Array.from(a.challenges).map(function(c){return lbl('challenge',c);}).join(', ') || 'Ikke angivet'],
+      ['Trafik', lbl('traffic', a.trafik)],
+      a.challenges.has('skybrud') ? ['Regnvand', lbl('regnvandsmetode', a.regnvandsmetode)] : null,
+      a.challenges.has('skybrud') ? ['Opland', a.opland.toLocaleString('da-DK')+' m²'] : null,
+      ['Jordbund', lbl('jordbund', a.jordbund)], ['Grundvand', lbl('grundvand', a.grundvand)],
+      (a.challenges.has('bytraeer')||a.challenges.has('eksisterende')) ? ['Ledninger', lbl('ledninger', a.ledninger)] : null,
+      ['Kloak', lbl('afloeb', a.afloeb)], ['Vintersaltning', lbl('saltning', a.saltning)],
+    ].filter(Boolean),
+    lines: lines, total:[lo, hi], tips: pickTips(a), metrics: computeMetrics(),
+    knowledge: knowledgeKeysFor(a).map(function(k){ return KNOWLEDGE[k]; }),
+  };
+}
+function reportHtml(d){
+  const photos = DIRECTIONS.filter(function(x){ return d.photos[x.id]; });
+  return '<header class="rep-head"><div><b>Mattle ApS</b><span>Projektrapport fra Løsningsbyggeren</span></div><span>'+d.date+'</span></header>' +
+    '<h2 class="rep-title">'+esc(d.facts[0][1]!=='Ikke angivet' ? d.facts[0][1] : 'Dit projekt')+'</h2>' +
+    '<section class="rep-sec"><h3>Projektet</h3><dl class="rep-dl">'+d.facts.map(function(f){return '<dt>'+f[0]+'</dt><dd>'+esc(f[1])+'</dd>';}).join('')+'</dl></section>' +
+    (photos.length ? '<section class="rep-sec"><h3>Området set fra luften</h3><div class="rep-photos">'+photos.map(function(x){ return '<figure><img src="'+d.photos[x.id]+'" alt="Skråfoto '+x.label.toLowerCase()+'"><figcaption>'+x.label+'</figcaption></figure>'; }).join('')+'</div><p class="rep-small">Skråfotos © Klimadatastyrelsen. Arealets placering i fotoet er omtrentlig.</p></section>' : '') +
+    '<section class="rep-sec"><h3>Forholdene</h3><dl class="rep-dl">'+d.conditions.map(function(f){return '<dt>'+f[0]+'</dt><dd>'+esc(f[1])+'</dd>';}).join('')+'</dl></section>' +
+    (d.tips.length ? '<section class="rep-sec"><h3>3 fagtips til dit projekt</h3>'+d.tips.map(function(t,i){ return '<div class="rep-tip"><b>'+(i+1)+'. '+t.h+'</b><p>'+t.p+'</p></div>'; }).join('')+'</section>' : '') +
+    '<section class="rep-sec"><h3>Anbefalet løsning</h3>'+d.lines.map(function(l){
+      return '<div class="rep-line"><b>'+strip(l.name)+(l.variant?': '+strip(l.variant):'')+'</b>'+(l.reason?'<p>'+strip(l.reason)+'</p>':'')+
+        (l.links&&l.links.length?'<p class="rep-small">Læs mere: '+l.links.map(function(k){return k.label+' ('+k.url+')';}).join(', ')+'</p>':'')+'</div>';
+    }).join('')+'</section>' +
+    '<section class="rep-sec"><h3>Prisoverslag</h3><table class="rep-table"><thead><tr><th>Komponent</th><th>Omfang</th><th>Spænd</th></tr></thead><tbody>'+
+      d.lines.map(function(l){ return '<tr><td>'+strip(l.name)+'</td><td>'+l.qty.toLocaleString('da-DK')+' '+l.unit+'</td><td>'+formatSpan(l.lo,l.hi,l.hi>100000?5000:1000)+'</td></tr>'; }).join('')+
+      '<tr class="rep-total"><td colspan="2">Samlet overslag</td><td>'+formatSpan(d.total[0], d.total[1], d.total[1]>1000000?25000:5000)+'</td></tr></tbody></table>'+
+      '<p class="rep-small">Vejledende spænd. Prisen afhænger af lokale forhold og fastlægges ved projektering.</p></section>' +
+    '<section class="rep-sec"><h3>Effekt</h3><ul class="rep-metrics">'+d.metrics.map(function(m){ return '<li><b>'+(m.raw?m.v:Number(m.v).toLocaleString('da-DK'))+' '+m.u+'</b> '+m.l+'</li>'; }).join('')+'</ul></section>' +
+    (d.knowledge.length ? '<section class="rep-sec rep-knowledge"><h3>Viden om dit projekt</h3>'+d.knowledge.map(function(k){
+      return '<div class="rep-k"><h4>'+k.title+'</h4>'+k.sections.map(function(s){ return '<p><b>'+s.h+'.</b> '+s.p+'</p>'; }).join('')+'</div>';
+    }).join('')+'</section>' : '') +
+    '<section class="rep-sec rep-next"><h3>Næste skridt</h3><p>Send rapporten til Mattle, eller ring på 8844 1030. Så gennemgår vi forholdene med dig og kvalificerer løsningen, før den skrives ind i projektet.</p><p class="rep-small">Mattle ApS · mattle.dk · Rapporten er et vejledende overslag og erstatter ikke teknisk dimensionering.</p></section>';
+}
+function renderDashboard(){
+  const d = buildReportData();
+  document.getElementById('report-doc').innerHTML = reportHtml(d);
+}
+function renderReportPreview(){
+  const d = buildReportData();
+  const photos = Object.keys(d.photos).length;
+  document.getElementById('report-contents').innerHTML = [
+    ['Projektets forhold', d.conditions.length+' forhold om jord, vand og trafik'],
+    ['Skråfotos', photos ? photos+' skråfotos af området' : 'Tilføjes, når arealet er placeret på kortet'],
+    ['Anbefalet løsning', d.lines.length+' komponenter med begrundelser og links'],
+    ['3 fagtips', 'Det, du skal være opmærksom på for at lykkes'],
+    ['Prisoverslag', 'Spænd pr. komponent og samlet'],
+    ['Viden om dit projekt', d.knowledge.length+' faglige temaer samlet ét sted'],
+  ].map(function(x){ return '<div class="report-benefit"><span class="ic">•</span><span><b>'+x[0]+'.</b> '+x[1]+'</span></div>'; }).join('');
+}
+function applyLeadMode(){
+  const note = document.getElementById('privacy-note');
+  if(!note) return;
+  note.innerHTML = MAPX.leads
+    ? 'Når du henter rapporten, sendes dine oplysninger og projektbeskrivelsen til Mattle ApS, som kan kontakte dig om projektet. Læs <a href="https://mattle.dk/" target="_blank" rel="noopener" id="privacy-link">Mattles privatlivspolitik</a>.'
+    : 'Dine oplysninger gemmes ikke og sendes ikke videre. De låser blot rapporten op på din enhed.';
+}
+async function submitReport(e){
+  e.preventDefault();
+  const f = document.getElementById('report-form');
+  const $ = function(id){ return document.getElementById(id); };
+  const hp = f.querySelector('input[name="website"]');
+  if(hp && hp.value) return false; // honeypot
+  const invalid = ['rep-name','rep-email','rep-consent'].filter(function(id){
+    const el = $(id); return el.type==='checkbox' ? !el.checked : (id==='rep-email' ? !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value.trim()) : !el.value.trim());
+  });
+  document.querySelectorAll('#report-form .field-error').forEach(function(e){ e.classList.remove('field-error'); });
+  if(invalid.length){
+    invalid.forEach(function(id){ ($(id).closest('.form-field')||$(id).closest('label')).classList.add('field-error'); });
+    document.getElementById('lead-status').textContent = invalid.indexOf('rep-consent')>=0 && invalid.length===1 ? 'Sæt flueben for at hente rapporten.' : 'Udfyld navn, en gyldig e-mail og sæt flueben for at hente rapporten.';
+    $(invalid[0]).focus();
+    return false;
+  }
+  const btn = f.querySelector('button[type="submit"]'); btn.disabled = true; btn.textContent = 'Samler rapporten…';
+  const status = document.getElementById('lead-status'); status.textContent = '';
+  const lead = {
+    name:$('rep-name').value.trim(), email:$('rep-email').value.trim(), phone:$('rep-phone').value.trim(),
+    company:$('rep-company').value.trim(), place:$('rep-place').value.trim(), year:$('rep-year').value,
+    consent:$('rep-consent').checked, newsletter:$('rep-news').checked,
+  };
+  if(MAPX.leads){
+    try{
+      const d = buildReportData();
+      const r = await fetch('/api/lead', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({
+        lead:lead, role:state.rolle, phase:state.fase,
+        project:{facts:d.facts, conditions:d.conditions, lines:d.lines.map(function(l){ return {name:strip(l.name), variant:strip(l.variant), qty:l.qty, unit:l.unit, lo:Math.round(l.lo), hi:Math.round(l.hi)}; }),
+          total:d.total.map(Math.round), tips:d.tips.map(function(t){return t.h;}), location:state.location ? {address:state.location.address, lat:state.location.lat, lon:state.location.lon, area:state.location.areaDrawn} : null,
+          link: location.href.split('#')[0] + '#losning=' + encodeURIComponent(JSON.stringify(serializeState()))}
+      })});
+      if(!r.ok) throw new Error('lead');
+    }catch(err){
+      status.textContent = 'Vi kunne ikke sende dine oplysninger lige nu. Prøv igen, eller ring til Mattle på 8844 1030.';
+      btn.disabled = false; btn.textContent = 'Hent rapporten';
+      track('mattle_lead_error', {});
+      return false;
+    }
+  }
+  state.reportUnlocked = true;
+  document.getElementById('step-report').classList.add('unlocked');
+  track('mattle_report_unlocked', {role:state.rolle||'ukendt', phase:state.fase||'ukendt', terrain:state.terrain, components:collectLineItems().length, newsletter:lead.newsletter});
+  document.getElementById('report-gate').style.display = 'none';
+  document.getElementById('dashboard').classList.add('shown');
+  renderDashboard();
+  downloadReport();
+  return false;
+}
+async function downloadReport(){
+  const doc = document.getElementById('report-doc');
+  const name = 'Mattle-projektrapport-'+new Date().toISOString().slice(0,10)+'.pdf';
+  try{
+    if(typeof html2pdf==='undefined') await loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js');
+    doc.classList.add('pdf-mode');
+    await html2pdf().set({margin:[12,12,14,12], filename:name, image:{type:'jpeg', quality:.9}, html2canvas:{scale:2, useCORS:true, backgroundColor:'#ffffff'},
+      jsPDF:{unit:'mm', format:'a4', orientation:'portrait'}, pagebreak:{mode:['css','legacy'], avoid:['.rep-line','.rep-tip','.rep-k','figure','tr']}}).from(doc).save();
+    track('mattle_report_download', {format:'pdf'});
+  }catch(e){
+    window.print();
+    track('mattle_report_download', {format:'print'});
+  }finally{ doc.classList.remove('pdf-mode'); }
+}
+
+/* ---------- navigation ---------- */
+function renderLegend(){
+  document.getElementById('legend').innerHTML = STEPS.map(function(s,i){
+    const cls = i<stepIndex ? 'done' : (i===stepIndex ? 'now' : '');
+    return '<span class="dot '+cls+'"></span>';
+  }).join('') + '<span class="lbl">'+STEP_LABELS[STEPS[stepIndex]]+'</span>';
+}
+function validateStep(){
+  const key = STEPS[stepIndex];
+  if(key==='terrain' && !state.terrain) return {msg:'Vælg en arealtype for at fortsætte.', el:'terrain-choices'};
+  if(key==='behov'){
+    const ground = state.terrain!=='tag' && state.terrain!=='sport';
+    if(ground && !state.traffic) return {msg:'Vælg hvilken trafik arealet skal bære. Den afgør, hvordan bærelaget dimensioneres.', el:'traffic-block'};
+    if(state.terrain==='tag' && !state.tagtype) return {msg:'Vælg typen af grønt tag.', el:'tag-dive'};
+    if(state.terrain==='sport' && !state.sporttype) return {msg:'Vælg typen af sportsareal.', el:'sport-dive'};
+    if(ground && state.challenges.size===0) return {msg:'Vælg mindst én udfordring, så vi kan pege på en løsning, der passer.', el:'challenges-block'};
+  }
+  return null;
+}
+function clearStepError(){
+  document.getElementById('step-error').textContent = '';
+  document.querySelectorAll('.field-error').forEach(function(e){ e.classList.remove('field-error'); });
+}
+function showStepError(err){
+  clearStepError();
+  document.getElementById('step-error').textContent = err.msg;
+  const el = document.getElementById(err.el);
+  if(el){ el.classList.add('field-error'); el.scrollIntoView({behavior:'smooth', block:'center'}); }
+  track('mattle_validation_error', {step:STEPS[stepIndex], field:err.el});
+}
+/* ---------- tracking (Google Tag Manager dataLayer, uden persondata) ---------- */
+function track(event, params){
+  try{ window.dataLayer = window.dataLayer || []; window.dataLayer.push(Object.assign({event:event}, params||{})); }catch(e){}
+}
+/* ---------- del / gem løsningen ---------- */
+function serializeState(){
+  return {v:1, s:STEPS[stepIndex], t:state.terrain, a:state.area, o:state.opland, tr:state.traffic, pl:state.plads, va:state.vanding,
+    rm:state.regnvandsmetode, bv:state.belaegningsvalg, tt:state.tagtype, st:state.sporttype, jb:state.jordbund, gv:state.grundvand,
+    le:state.ledninger, af:state.afloeb, sa:state.saltning, ro:state.rolle, fa:state.fase,
+    c:Array.from(state.challenges), gi:state.groupIncluded, go:state.groupOption, gt:state.groupTouched,
+    i:Array.from(state.included), ai:Array.from(state.autoIncluded), ti:state.touchedInclude, q:state.qty, loc:state.location};
+}
+function restoreState(d){
+  if(!d || d.v!==1) return false;
+  Object.assign(state, {terrain:d.t, area:d.a||500, opland:d.o||0, traffic:d.tr, plads:d.pl, vanding:d.va, regnvandsmetode:d.rm,
+    belaegningsvalg:d.bv, tagtype:d.tt, sporttype:d.st, jordbund:d.jb, grundvand:d.gv, ledninger:d.le, afloeb:d.af, saltning:d.sa,
+    rolle:d.ro, fase:d.fa, challenges:new Set(d.c||[]), groupIncluded:d.gi||{}, groupOption:d.go||{}, groupTouched:d.gt||{},
+    included:new Set(d.i||[]), autoIncluded:new Set(d.ai||[]), touchedInclude:d.ti||{}, qty:d.q||{}, location:d.loc||null});
+  return true;
+}
+function shareSolution(){
+  const base = location.href.split('#')[0];
+  const url = base + '#losning=' + encodeURIComponent(JSON.stringify(serializeState()));
+  const row = document.getElementById('share-row'), input = document.getElementById('share-url'), status = document.getElementById('share-status');
+  row.hidden = false; input.value = url; input.focus(); input.select();
+  track('mattle_share', {terrain:state.terrain});
+  const done = function(ok){ status.textContent = ok ? 'Linket er kopieret.' : 'Kopiér linket herover.'; };
+  try{
+    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(url).then(function(){done(true);}, function(){done(false);}); }
+    else done(false);
+  }catch(e){ done(false); }
+}
+function loadFromHash(){
+  const m = location.hash.match(/^#losning=(.+)$/);
+  if(!m) return false;
+  try{ return restoreState(JSON.parse(decodeURIComponent(m[1]))); }catch(e){ return false; }
+}
+function applyRoleCopy(){
+  const r = ROLE_CTA[state.rolle];
+  document.querySelectorAll('.cta-contact').forEach(function(a){
+    if(!a.dataset.defaultLabel) a.dataset.defaultLabel = a.textContent;
+    a.textContent = r ? r.label : a.dataset.defaultLabel;
+  });
+  const lede = document.getElementById('package-lede');
+  if(!lede.dataset.defaultText) lede.dataset.defaultText = lede.textContent;
+  lede.textContent = r ? r.lede+' Du kan se og bruge pakken uden at oplyse kontaktoplysninger.' : lede.dataset.defaultText;
+}
+function renderStep(){
+  STEPS.forEach(function(s,i){
+    document.getElementById('step-'+s).classList.toggle('active', i===stepIndex);
+  });
+  const key = STEPS[stepIndex];
+  if(key==='terrain') renderTerrainStep();
+  if(key==='behov'){ renderArea(); renderBehovStep(); updateFieldVisibility(); }
+  if(key==='losning') renderResults();
+  if(key==='package') renderPackage();
+  if(key==='placering') initPlacering();
+  if(key==='report'){ renderReportPreview(); if(state.reportUnlocked) renderDashboard(); }
+
+  document.getElementById('btn-back').style.visibility = stepIndex===0 ? 'hidden' : 'visible';
+  const nextBtn = document.getElementById('btn-next');
+  nextBtn.style.display = (key==='package' || key==='report') ? 'none' : '';
+  nextBtn.textContent = key==='losning' ? 'Se pakke og pris' : 'Næste';
+  document.getElementById('step-count').textContent = stepIndex===0 ? '' : 'Trin '+stepIndex+' af '+(STEPS.length-1);
+  clearStepError();
+  applyRoleCopy();
+  document.getElementById('step-report').classList.toggle('unlocked', !!state.reportUnlocked);
+  track('mattle_step_view', {step:key, step_number:stepIndex, role:state.rolle||'ukendt', phase:state.fase||'ukendt', terrain:state.terrain||'ukendt'});
+  renderLegend();
+  window.scrollTo({top:0, behavior:'instant'});
+}
+function goTo(key){
+  const idx = STEPS.indexOf(key);
+  if(idx<0) return;
+  stepIndex = idx;
+  renderStep();
+}
+function stepNext(){
+  const err = validateStep();
+  if(err){ showStepError(err); return; }
+  if(stepIndex < STEPS.length-1){ stepIndex++; renderStep(); }
+}
+function stepBack(){
+  if(stepIndex>0){ stepIndex--; renderStep(); }
+}
+
+document.getElementById('print-date').textContent = new Date().toLocaleDateString('da-DK');
+document.addEventListener('click', function(e){
+  const a = e.target.closest && e.target.closest('a');
+  if(!a) return;
+  if(a.classList.contains('cta-contact')) track('mattle_cta_click', {placement:a.dataset.cta, role:state.rolle||'ukendt'});
+  else if(a.closest('.more-links')) track('mattle_knowledge_link', {url:a.href});
+});
+mountStaticDeep();
+checkConfig();
+if(loadFromHash()){ stepIndex = STEPS.indexOf('losning'); }
+renderStep();
+</script>
+
+</body></html>
