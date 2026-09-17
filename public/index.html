@@ -270,6 +270,17 @@
   .addr-opt{ display:block; width:100%; text-align:left; background:none; border:0; border-bottom:1px solid var(--line); padding:10px 14px; font-size:.95rem; color:var(--ink); cursor:pointer; }
   .addr-opt:hover, .addr-opt:focus{ background:var(--moss-pale); }
   .addr-empty{ padding:10px 14px; font-size:.9rem; color:var(--ink-soft); }
+  .addr-field{ position:relative; }
+  .addr-field input{ padding-right:40px; }
+  .addr-clear{ position:absolute; right:6px; top:50%; transform:translateY(-50%); width:28px; height:28px; border:0; border-radius:50%; background:var(--line); color:var(--ink); font-size:1.1rem; line-height:1; cursor:pointer; }
+  .addr-clear:hover{ background:var(--moss-pale); }
+  .addr-opt[aria-selected="true"]{ background:var(--moss-pale); }
+  .addr-opt .hit{ font-weight:700; }
+  .addr-busy{ padding:10px 14px; font-size:.9rem; color:var(--ink-soft); }
+  .addr-chosen{ display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between;
+    background:var(--moss-pale); border:1px solid var(--moss); border-radius:8px; padding:12px 14px; margin-bottom:12px; }
+  .addr-chosen-label{ display:block; font-size:.75rem; letter-spacing:.06em; text-transform:uppercase; color:var(--moss-deep); font-weight:700; }
+  .addr-chosen strong{ font-size:1.05rem; }
   #map{ height:clamp(320px,55vh,520px); border:1px solid var(--line); background:#DADCD6; max-width:none !important; }
   #map.drawing{ cursor:crosshair; }
   .step > #map-ready, .step > #photos-wrap{ max-width:none; }
@@ -414,10 +425,19 @@
     <h2>Hvor ligger arealet?</h2>
     <p class="lede">Find adressen, og tegn arealet på luftfotoet. Så beregner vi arealet og henter skråfotos fra fire retninger, så du og Mattle kan se forholdene omkring projektet.</p>
     <div id="map-ready" hidden>
-      <div class="addr-wrap">
-        <label class="q" for="addr-input">Søg adresse</label>
-        <input type="text" id="addr-input" autocomplete="off" placeholder="F.eks. Park Allé 15, 6600 Vejen" aria-controls="addr-results">
-        <ul class="addr-results" id="addr-results"></ul>
+      <div class="addr-wrap" id="addr-search">
+        <label class="q" for="addr-input">Hvad er adressen på projektet?</label>
+        <p class="field-hint">Skriv vejnavn og nummer, og vælg den rigtige adresse i listen. Så henter vi luftfoto og skråfotos af stedet.</p>
+        <div class="addr-field">
+          <input type="text" id="addr-input" autocomplete="off" role="combobox" aria-expanded="false"
+                 aria-autocomplete="list" aria-controls="addr-results" placeholder="F.eks. Park Allé 15, 6600 Vejen">
+          <button type="button" class="addr-clear" id="addr-clear" hidden aria-label="Ryd søgningen" onclick="clearSearch()">&times;</button>
+        </div>
+        <ul class="addr-results" id="addr-results" role="listbox" aria-label="Adresseforslag"></ul>
+      </div>
+      <div class="addr-chosen" id="addr-chosen" hidden>
+        <div><span class="addr-chosen-label">Valgt adresse</span><strong id="addr-chosen-text"></strong></div>
+        <button type="button" class="btn btn-outline" onclick="changeAddress()">Skift adresse</button>
       </div>
       <div id="map" role="application" aria-label="Luftfoto til indtegning af arealet"></div>
       <div class="draw-bar">
@@ -427,8 +447,11 @@
       </div>
       <p class="draw-status" id="draw-status" aria-live="polite">Søg en adresse for at komme i gang.</p>
       <div id="photos-wrap" hidden>
-        <h3 style="margin-top:28px;">Skråfotos af området</h3>
-        <p class="field-hint">Skråfotos viser facader, træer, terræn og adgangsforhold, som et luftfoto lige ovenfra skjuler. Arealets placering i fotoet er omtrentlig.</p>
+        <div id="photos-head">
+          <h3 style="margin-top:28px;">Skråfotos af området</h3>
+          <p class="field-hint">Skråfotos viser facader, træer, terræn og adgangsforhold, som et luftfoto lige ovenfra skjuler. Arealet er indtegnet ud fra terrænhøjden på stedet.</p>
+        </div>
+        <p class="field-hint" id="photos-unavailable" hidden></p>
         <div class="photo-grid" id="photo-grid"></div>
       </div>
     </div>
@@ -1663,7 +1686,7 @@ const DIRECTIONS = [
   {id:'north', label:'Set mod nord'}, {id:'east', label:'Set mod øst'},
   {id:'south', label:'Set mod syd'}, {id:'west', label:'Set mod vest'},
 ];
-const MAPX = {checked:false, available:false, leads:false, map:null, layer:null, line:null, poly:null, marker:null,
+const MAPX = {checked:false, available:false, leads:false, terrain:false, map:null, layer:null, line:null, poly:null, marker:null,
   drawing:false, pts:[], photoJob:0};
 state.location = null;   // {address, lat, lon, x, y, polygon:[[lat,lon]], areaDrawn}
 state.photos = {};       // {north:dataURL, ...}
@@ -1676,7 +1699,7 @@ async function checkConfig(){
   MAPX.checked = true;
   try{
     const r = await fetch('/api/config', {cache:'no-store'});
-    if(r.ok){ const c = await r.json(); MAPX.available = !!c.maps; MAPX.leads = !!c.leads; }
+    if(r.ok){ const c = await r.json(); MAPX.available = !!c.maps; MAPX.leads = !!c.leads; MAPX.terrain = !!c.terrain; }
   }catch(e){ MAPX.available = false; }
   applyLeadMode();
 }
@@ -1705,38 +1728,149 @@ function buildMap(){
   bindSearch();
 }
 function toUTM(lat, lon){ return proj4('EPSG:4326', 'EPSG:25832', [lon, lat]); }
-function polygonAreaM2(pts){
-  const p = pts.map(function(ll){ return toUTM(ll[0], ll[1]); });
+function shoelace(p){
   let s = 0;
   for(let i=0;i<p.length;i++){ const j=(i+1)%p.length; s += p[i][0]*p[j][1] - p[j][0]*p[i][1]; }
   return Math.abs(s)/2;
 }
+/* UTM er konform: den bevarer vinkler, men ikke arealer. Målestoksforholdet k er 0,9996 på
+   midtmeridianen (9°Ø) og vokser mod zonens kanter, og arealer skaleres med k². Uden
+   korrektion måler vi 0,08 % for lidt i Jylland og 0,28 % for meget på Bornholm. */
+function polygonAreaM2(pts){
+  const p = pts.map(function(ll){ return toUTM(ll[0], ll[1]); });
+  const A = shoelace(p);
+  const GRS80_A = 6378137.0, GRS80_E2 = 0.00669438002290;
+  const latM = pts.reduce(function(s,q){ return s+q[0]; }, 0)/pts.length * Math.PI/180;
+  const W = Math.sqrt(1 - GRS80_E2*Math.pow(Math.sin(latM),2));
+  const R = GRS80_A*Math.sqrt(1-GRS80_E2)/(W*W);
+  const E = (p.reduce(function(s,q){ return s+q[0]; }, 0)/p.length - 500000)/0.9996;
+  const k = 0.9996*(1 + E*E/(2*R*R) + Math.pow(E,4)/(24*Math.pow(R,4)));
+  return A/(k*k);
+}
+/* Krydser kanterne hinanden, trækker arealformlen fra i stedet for at lægge til. Et
+   "butterfly" kan give nul m². Sådan et polygon afvises hellere end at give et forkert tal. */
+function polygonSelfIntersects(pts){
+  const n = pts.length;
+  if(n < 4) return false;
+  const cross = function(o,a,b){ return (a[0]-o[0])*(b[1]-o[1]) - (a[1]-o[1])*(b[0]-o[0]); };
+  const within = function(o,a,b){ return Math.min(o[0],a[0])<=b[0] && b[0]<=Math.max(o[0],a[0]) && Math.min(o[1],a[1])<=b[1] && b[1]<=Math.max(o[1],a[1]); };
+  const hits = function(p1,p2,p3,p4){
+    const d1=cross(p3,p4,p1), d2=cross(p3,p4,p2), d3=cross(p1,p2,p3), d4=cross(p1,p2,p4);
+    if(((d1>0&&d2<0)||(d1<0&&d2>0)) && ((d3>0&&d4<0)||(d3<0&&d4>0))) return true;
+    return (d1===0 && within(p3,p4,p1)) || (d2===0 && within(p3,p4,p2))
+        || (d3===0 && within(p1,p2,p3)) || (d4===0 && within(p1,p2,p4));
+  };
+  for(let i=0;i<n;i++) for(let j=i+1;j<n;j++){
+    if(j===i+1 || (i===0 && j===n-1)) continue;   // nabosider deler et hjørne
+    if(hits(pts[i], pts[(i+1)%n], pts[j], pts[(j+1)%n])) return true;
+  }
+  return false;
+}
 
 /* ---- adressesøgning ---- */
+let ADDR = {results:[], active:-1};
+function closeSuggestions(){
+  const list = document.getElementById('addr-results');
+  list.innerHTML = ''; ADDR.results = []; ADDR.active = -1;
+  document.getElementById('addr-input').setAttribute('aria-expanded','false');
+}
+function markActive(){
+  const opts = document.querySelectorAll('#addr-results .addr-opt');
+  opts.forEach(function(o,i){
+    const on = i===ADDR.active;
+    o.setAttribute('aria-selected', String(on));
+    if(on) o.scrollIntoView({block:'nearest'});
+  });
+}
+/* Fremhæv det, brugeren har skrevet, i hvert forslag. */
+function highlight(label, q){
+  const i = label.toLowerCase().indexOf(q.toLowerCase());
+  if(i < 0) return esc(label);
+  return esc(label.slice(0,i)) + '<span class="hit">' + esc(label.slice(i, i+q.length)) + '</span>' + esc(label.slice(i+q.length));
+}
+function clearSearch(){
+  const input = document.getElementById('addr-input');
+  input.value = ''; closeSuggestions();
+  document.getElementById('addr-clear').hidden = true;
+  input.focus();
+}
+function changeAddress(){
+  forgetDrawnArea();
+  state.location = null; state.photos = {};
+  clearDrawing();
+  if(MAPX.marker){ MAPX.marker.remove(); MAPX.marker = null; }
+  MAPX.photoJob++;                               // stop billeder, der stadig er undervejs
+  document.getElementById('photos-wrap').hidden = true;
+  document.getElementById('photo-grid').innerHTML = '';
+  document.getElementById('addr-chosen').hidden = true;
+  document.getElementById('addr-search').hidden = false;
+  setDrawStatus('Søg en adresse for at komme i gang.');
+  updateDrawButtons();
+  track('mattle_location_change', {});
+  clearSearch();
+}
+function showChosenAddress(label){
+  document.getElementById('addr-chosen-text').textContent = label;
+  document.getElementById('addr-chosen').hidden = false;
+  document.getElementById('addr-search').hidden = true;
+}
 function bindSearch(){
   const input = document.getElementById('addr-input'), list = document.getElementById('addr-results');
   let timer = null, seq = 0;
+  const choose = function(i){
+    const res = ADDR.results[i];
+    if(!res) return;
+    input.value = res.label;
+    closeSuggestions();
+    document.getElementById('addr-clear').hidden = false;
+    pickAddress(res);
+    showChosenAddress(res.label);
+  };
   input.addEventListener('input', function(){
     clearTimeout(timer);
     const q = input.value.trim();
-    if(q.length < 3){ list.innerHTML=''; return; }
+    document.getElementById('addr-clear').hidden = !input.value;
+    if(q.length < 2){ closeSuggestions(); return; }
+    list.innerHTML = '<li class="addr-busy">Søger…</li>';
+    input.setAttribute('aria-expanded','true');
     timer = setTimeout(async function(){
       const my = ++seq;
       try{
         const r = await fetch('/api/adresse?q='+encodeURIComponent(q));
         const data = await r.json();
         if(my!==seq) return;
-        list.innerHTML = (data.results||[]).map(function(x, i){
-          return '<li><button type="button" class="addr-opt" data-i="'+i+'">'+x.label+'</button></li>';
-        }).join('') || '<li class="addr-empty">Ingen adresser fundet</li>';
+        ADDR.results = data.results || []; ADDR.active = -1;
+        list.innerHTML = ADDR.results.length
+          ? ADDR.results.map(function(x, i){ return '<li role="presentation"><button type="button" role="option" aria-selected="false" class="addr-opt" data-i="'+i+'">'+highlight(x.label, q)+'</button></li>'; }).join('')
+          : '<li class="addr-empty">Ingen adresser fundet. Prøv med vejnavn og nummer, f.eks. Park Allé 15.</li>';
         list.querySelectorAll('.addr-opt').forEach(function(b){
-          b.addEventListener('click', function(){ pickAddress(data.results[+b.dataset.i]); list.innerHTML=''; input.value = data.results[+b.dataset.i].label; });
+          b.addEventListener('mousedown', function(e){ e.preventDefault(); choose(+b.dataset.i); });
         });
-      }catch(e){ list.innerHTML = '<li class="addr-empty">Søgningen er ikke tilgængelig lige nu</li>'; }
+      }catch(e){
+        if(my===seq) list.innerHTML = '<li class="addr-empty">Søgningen er ikke tilgængelig lige nu. Prøv igen om lidt.</li>';
+      }
     }, 250);
   });
+  input.addEventListener('keydown', function(e){
+    if(!ADDR.results.length){
+      if(e.key==='Escape') clearSearch();
+      return;
+    }
+    if(e.key==='ArrowDown'){ e.preventDefault(); ADDR.active = (ADDR.active+1) % ADDR.results.length; markActive(); }
+    else if(e.key==='ArrowUp'){ e.preventDefault(); ADDR.active = (ADDR.active-1+ADDR.results.length) % ADDR.results.length; markActive(); }
+    else if(e.key==='Enter'){ e.preventDefault(); choose(ADDR.active >= 0 ? ADDR.active : 0); }
+    else if(e.key==='Escape'){ closeSuggestions(); }
+  });
+  input.addEventListener('blur', function(){ setTimeout(closeSuggestions, 120); });
+}
+/* Et areal, der er tegnet ved den forrige adresse, gælder ikke et nyt sted. Et tal, brugeren
+   selv har rettet, får lov at blive stående. Kaldes både ved skift og ved nyt valg. */
+function forgetDrawnArea(){
+  const prev = state.location;
+  if(prev && prev.areaDrawn && state.area === Math.max(10, prev.areaDrawn)) state.area = 500;
 }
 function pickAddress(res){
+  forgetDrawnArea();
   const xy = toUTM(res.lat, res.lon);
   state.location = {address:res.label, lat:res.lat, lon:res.lon, x:xy[0], y:xy[1], polygon:null, areaDrawn:null};
   MAPX.map.setView([res.lat, res.lon], 19);
@@ -1775,9 +1909,15 @@ function redrawLine(){
 function undoVertex(){ MAPX.pts.pop(); redrawLine(); updateDrawButtons(); }
 function finishDrawing(){
   if(MAPX.pts.length < 3) return;
+  const pts = MAPX.pts.map(function(p){ return [p.lat, p.lng]; });
+  if(polygonSelfIntersects(pts)){
+    setDrawStatus('Kanterne krydser hinanden, så arealet kan ikke beregnes. Tryk "Fortryd punkt", og sæt hjørnerne hele vejen rundt langs kanten.');
+    document.getElementById('draw-status').classList.add('field-error');
+    return;
+  }
+  document.getElementById('draw-status').classList.remove('field-error');
   MAPX.drawing = false;
   document.getElementById('map').classList.remove('drawing');
-  const pts = MAPX.pts.map(function(p){ return [p.lat, p.lng]; });
   drawPolygon(pts);
   const area = Math.round(polygonAreaM2(pts));
   let cx=0, cy=0; pts.forEach(function(p){ cx+=p[0]; cy+=p[1]; }); cx/=pts.length; cy/=pts.length;
@@ -1833,19 +1973,49 @@ function getImageXY(item, X, Y, Z){
   const yd = -c*((D12*(X-X0)+D22*(Y-Y0)+D32*(Z-Z0))/den);
   return [((xd-xx0)+dimX)*-1/pix, ((yd-yy0)+dimY)*-1/pix];
 }
+/* Terrænkoten i punktet. Uden den kan et skråfoto ikke placeres rigtigt, jf. /api/kote. */
+async function fetchKote(loc){
+  if(!MAPX.terrain) return null;
+  try{
+    const r = await fetch('/api/kote?x='+loc.x.toFixed(2)+'&y='+loc.y.toFixed(2));
+    if(!r.ok) return null;
+    const d = await r.json();
+    return typeof d.kote === 'number' && isFinite(d.kote) ? d.kote : null;
+  }catch(e){ return null; }
+}
+function hidePhotos(msg){
+  const wrap = document.getElementById('photos-wrap');
+  document.getElementById('photo-grid').innerHTML = '';
+  document.getElementById('photos-unavailable').textContent = msg;
+  document.getElementById('photos-unavailable').hidden = false;
+  document.getElementById('photos-head').hidden = true;
+  wrap.hidden = false;
+}
 async function loadPhotos(){
   if(!state.location) return;
   const job = ++MAPX.photoJob;
   const grid = document.getElementById('photo-grid');
-  document.getElementById('photos-wrap').hidden = false;
+  const wrap = document.getElementById('photos-wrap');
+  state.photos = {};
+
+  const loc = state.location;
+  const kote = await fetchKote(loc);
+  if(job!==MAPX.photoJob) return;
+  if(kote === null){
+    // Hellere ingen skråfotos end skråfotos af naboens grund.
+    hidePhotos('Skråfotos vises ikke, fordi terrænhøjden på stedet ikke kan hentes lige nu. Uden den ville billederne vise et punkt ved siden af arealet.');
+    return;
+  }
+  document.getElementById('photos-unavailable').hidden = true;
+  document.getElementById('photos-head').hidden = false;
+  wrap.hidden = false;
   grid.innerHTML = DIRECTIONS.map(function(d){
     return '<figure class="photo" id="photo-'+d.id+'"><div class="photo-frame"><span class="photo-msg">Henter skråfoto…</span></div><figcaption>'+d.label+'</figcaption></figure>';
   }).join('');
-  state.photos = {};
   if(typeof GeoTIFF==='undefined'){
     try{ await loadScript(LIBS.geotiff); }catch(e){ grid.querySelectorAll('.photo-msg').forEach(function(m){ m.textContent='Skråfotos kunne ikke indlæses'; }); return; }
   }
-  const loc = state.location;
+  if(job!==MAPX.photoJob) return;
   await Promise.all(DIRECTIONS.map(async function(d){
     const fig = document.getElementById('photo-'+d.id);
     try{
@@ -1853,7 +2023,7 @@ async function loadPhotos(){
       const item = await r.json();
       if(job!==MAPX.photoJob) return;
       if(!r.ok || !item || !item.href){ fig.querySelector('.photo-msg').textContent = 'Intet skråfoto fundet her'; return; }
-      const url = await renderPhoto(item, loc, fig);
+      const url = await renderPhoto(item, loc, fig, kote);
       if(job!==MAPX.photoJob) return;
       state.photos[d.id] = url;
       const yr = item.datetime ? new Date(item.datetime).getFullYear() : '';
@@ -1863,11 +2033,11 @@ async function loadPhotos(){
     }
   }));
 }
-async function renderPhoto(item, loc, fig){
+async function renderPhoto(item, loc, fig, kote){
   const tiff = await GeoTIFF.fromUrl(item.href);
   const full = await tiff.getImage(0);
   const W = full.getWidth(), H = full.getHeight();
-  const Z = 0; // Terrænkote ukendt: punktet placeres omtrentligt i billedet
+  const Z = kote;  // terrænkote i DVR90; afgørende for at ramme det rigtige sted
   const center = getImageXY(item, loc.x, loc.y, Z);
   let pts = null, half = 450;
   if(loc.polygon){
