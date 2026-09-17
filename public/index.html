@@ -753,7 +753,10 @@ const GLOSSARY = {
 function term(key, label){
   return '<span class="term" tabindex="0" data-tip="'+GLOSSARY[key].replace(/"/g,'&quot;')+'">'+label+'</span>';
 }
-function L(label, url){ return {label:label, url:url}; }
+/* Hed tidligere L, men Leaflet lægger sin egen globale L ind, når kortet indlæses, og
+   overskrev denne. Links inde i et options:-kald udregnes først ved optegning — altså
+   efter Leaflet — så løsningssiden kastede "L is not a function" og blev tom. */
+function lnk(label, url){ return {label:label, url:url}; }
 const U = {
   baerelag:'https://mattle.dk/loesninger/funktionelle-forstaerkede-baerelag-og-stabilisering/',
   tencate:'https://mattle.dk/produkter/tencate-geotextiler-og-geonet/',
@@ -887,16 +890,16 @@ const GROUPS = [
     visibleIf:a=>a.terrain!=='tag',
     unit:'m²', qty:a=>a.area,
     fact:'Bærelaget er fundamentet for hele opbygningen. Det afgør, om belægning, magasin og rødder holder på sigt, og detaljerne under jorden er dem, der koster, hvis de er forkerte.',
-    links:[L('Bærelag og stabilisering', U.baerelag)],
+    links:[lnk('Bærelag og stabilisering', U.baerelag)],
     options:a=>[
       {id:'let', label:'Standard bærelag', price:450,
         reason:'Arealet bruges kun af gående og cyklister, så bærelaget kan dimensioneres lettere. Det giver mindre afgravning, mindre materiale og et mindre CO₂-aftryk fra jordarbejdet.'},
       {id:'forstaerket', label:'Forstærket bærelag med TenCate geotekstil', price:650,
         reason:'Med biltrafik fordeler geotekstil eller geonet lasten, så bærelaget kan holdes tyndere uden sætninger. Tykkelse og materialevalg beregnes ud fra '+term('trafikklasse','trafikklassen')+' og den ønskede '+term('evaerdi','E-værdi')+'.',
-        links:[L('TenCate geotekstiler og geonet', U.tencate)]},
+        links:[lnk('TenCate geotekstiler og geonet', U.tencate)]},
       {id:'tung', label:'Stabiliseret bærelag til tung trafik (Mirafi® H2Ri)', price:820,
         reason:'Lastbiler og busser stiller de største krav til bærelaget. Mirafi H2Ri stabiliserer også over blød bund, så man kan undgå at grave dybt ud og udskifte jorden.'+(a.jordbund==='ler'?' Det er særligt relevant, fordi I har angivet leret jord.':''),
-        links:[L('Mirafi H2Ri', U.mirafi), L('TenCate geotekstiler og geonet', U.tencate)]},
+        links:[lnk('Mirafi H2Ri', U.mirafi), lnk('TenCate geotekstiler og geonet', U.tencate)]},
     ],
     defaultOption:a=> a.trafik==='tung' ? 'tung' : (a.trafik==='let' ? 'forstaerket' : 'let'),
   },
@@ -909,23 +912,23 @@ const GROUPS = [
       if(a.regnvandsmetode==='nedsivning') return [
         {id:'lar', label:term('lar','LAR')+': nedsivning med permeabelt bærelag', price:300,
           reason:'Vandet siver ned tæt på, hvor det falder. Det aflaster kloakken og holder vandet i det lokale kredsløb, og et permeabelt bærelag med Permaweb fungerer som buffer under belægningen.'+(poorInfiltration(a)?' Men I har angivet leret jord eller højt grundvand. Så skal en nedsivningstest vise, om jorden kan tage vandet, før denne løsning vælges.':(a.jordbund==='ukendt'||!a.jordbund?' Nedsivning forudsætter, at en nedsivningstest viser, at jorden kan tage vandet.':'')),
-          links:[L('LAR (Blue2Green)', U.lar), L('Permaweb', U.permaweb)]},
+          links:[lnk('LAR (Blue2Green)', U.lar), lnk('Permaweb', U.permaweb)]},
         {id:'klimavej-taet', label:'Klimavej som tæt bassin', price:480,
           reason:'Klimavejen kan bygges som et tæt bassin, hvor regnvandet holdes tilbage og bruges til vanding af træer og bede, før overskudsvandet ledes videre. Det er det sikre valg, når jorden ikke kan tage vandet.',
-          links:[L('Klimaveje', U.klimavej)]},
+          links:[lnk('Klimaveje', U.klimavej)]},
       ];
       if(a.regnvandsmetode==='klimavej') return [
         {id:'klimavej', label:'Klimavej (EcoBase® og Accorder®)', price:480,
           reason:'Vejkassen bliver selv magasinet. Med et '+term('porevolumen','porevolumen')+' på over 35 % kan en 50 cm opbygning rumme omkring 175 liter vand pr. m², og vejen er kørefast allerede under udførelsen. Vandet kan nedsives eller holdes tilbage til vanding af byens træer.'+(poorInfiltration(a)?' Med leret jord eller højt grundvand bygges den som tæt bassin.':''),
-          links:[L('Klimaveje', U.klimavej)]},
+          links:[lnk('Klimaveje', U.klimavej)]},
       ];
       return [
         {id:'korsel', label:'Kørefast magasin (PermaVoid®)', price:420,
           reason:'Med trafik på arealet skal magasinet bære last ovenfra. PermaVoid-kassetter spreder belastningen og kan dimensioneres fra personbiler til tunge lastvogne, mens de holder på vandet.',
-          links:[L('PermaVoid', U.permavoid), L('D-Raintank', U.draintank)]},
+          links:[lnk('PermaVoid', U.permavoid), lnk('D-Raintank', U.draintank)]},
         {id:'regnbed', label:'Klimabed med '+term('kapillaer','kapillær vanding')+' og magasin', price:260,
           reason:'Uden kørende trafik kan vandet håndteres synligt i et klimabed. Et magasin under bedet og kapillær vanding giver planterne vand i tørre perioder, og filterjorden renser vandet for tungmetaller.',
-          links:[L('Klimabede', U.klimabed)]},
+          links:[lnk('Klimabede', U.klimabed)]},
       ];
     },
     defaultOption:a=>{
@@ -939,14 +942,14 @@ const GROUPS = [
     visibleIf:a=>a.terrain!=='tag' && a.terrain!=='sport' && a.challenges.has('bytraeer'),
     unit:'træ', hasQty:true, defaultQty:a=>Math.max(1, Math.round(a.area/120)), qtyLabel:'antal træer',
     fact:'Et bytræ skal have lys, luft, vand og jord, det kan vokse i. Under belægninger vokser rødderne ofte i stabilgrus og komprimeret jord i konkurrence med ledninger. Mattle planter efter konceptet Skovfogedens Bytræer og giver '+term('vaekstgaranti','vækstgaranti')+'. Valget mellem ArborRaft og TreeParker afklares endeligt ud fra projektets forhold.',
-    links:[L('Skovfogedens Bytræer', U.skovfoged)],
+    links:[lnk('Skovfogedens Bytræer', U.skovfoged)],
     options:a=>[
       {id:'arborraft', label:'ArborRaft® sandwichopbygning', price:14500,
         reason:'Vi peger på ArborRaft, fordi der er plads under belægningen. Kassetterne lægges oven på et bærende vækstmedie (Optima Balance) og bærer trafikken. Ventilation i kassetterne danner en iltbarriere, så rødderne vokser i jorden og ikke op i belægningen.',
-        links:[L('ArborRaft', U.arborraft)]},
+        links:[lnk('ArborRaft', U.arborraft)]},
       {id:'treeparker', label:'TreeParker® '+term('rodcelle','rodkassette'), price:21500,
         reason:'Vi peger på TreeParker, fordi '+(a.ledninger==='mange'?'der er mange ledninger i jorden':'pladsen er trang')+'. TreeParker bærer tung trafik, kan justeres i højden fra 20 til 150 cm på byggepladsen og er designet, så ledninger kan føres igennem og repareres.',
-        links:[L('TreeParker', U.treeparker)]},
+        links:[lnk('TreeParker', U.treeparker)]},
     ],
     defaultOption:a=> (a.plads==='begraenset' || a.ledninger==='mange') ? 'treeparker' : 'arborraft',
   },
@@ -955,11 +958,11 @@ const GROUPS = [
     visibleIf:a=>a.terrain!=='tag' && a.terrain!=='sport' && a.challenges.has('eksisterende'),
     unit:'træ', hasQty:true, defaultQty:a=>Math.max(1, Math.round(a.area/150)), qtyLabel:'antal eksisterende træer',
     fact:'Eksisterende træer er en stor kapital, der har brugt årtier på at vokse. Fælder man dem for at løse rodhævninger, taber man skygge, køling og vandoptag, som nye træer først kan give igen mange år senere.',
-    links:[L('Forebyg rodhævning', U.rodhaevning)],
+    links:[lnk('Forebyg rodhævning', U.rodhaevning)],
     options:a=>[
       {id:'arborraft-eks', label:'ArborRaft® til eksisterende træer', price:16500,
         reason:'Stabilgrus omkring rødderne erstattes af egnet vækstmedie og ArborRaft-kassetter. Træet får bedre adgang til luft og vand, og belægningen ovenpå beskyttes mod nye rodhævninger.',
-        links:[L('ArborRaft', U.arborraft)]},
+        links:[lnk('ArborRaft', U.arborraft)]},
     ],
     defaultOption:a=>'arborraft-eks',
   },
@@ -971,13 +974,13 @@ const GROUPS = [
     options:a=>[
       {id:'ekstensiv', label:'Ekstensivt grønt tag (Green Roof)', price:650,
         reason:'Et ekstensivt tag er let, kræver næsten ingen vedligeholdelse og passer til de fleste tagkonstruktioner uden ekstra forstærkning.',
-        links:[L('Green Roof', U.greenroof), L('Grønne tage fra Optigreen', U.optigreen)]},
+        links:[lnk('Green Roof', U.greenroof), lnk('Grønne tage fra Optigreen', U.optigreen)]},
       {id:'intensiv', label:'Intensiv taghave', price:1250,
         reason:'En intensiv taghave giver plads til rigtige bede, buske og ophold, men kræver typisk en kraftigere tagkonstruktion. Mattles letvægts-tagjord holder vægten nede.',
-        links:[L('Vækstmedier til taghaver', U.vaekstmedier)]},
+        links:[lnk('Vækstmedier til taghaver', U.vaekstmedier)]},
       {id:'permavoid', label:'Vandhåndterende tag med PermaVoid®', price:980,
         reason:'PermaVoid-kassetter under vækstmediet holder på regnvandet og giver det tilbage til planterne via kapillærvirkning. Vandstanden kan styres med overløb eller sensorer, og et tag på 1.000 m² kan rumme omkring 85 m³ vand.',
-        links:[L('Taghaver med PermaVoid', U.tagpermavoid)]},
+        links:[lnk('Taghaver med PermaVoid', U.tagpermavoid)]},
     ],
     defaultOption:a=> a.tagtype || 'ekstensiv',
   },
@@ -989,10 +992,10 @@ const GROUPS = [
     options:a=>[
       {id:'kunststof', label:'Kunststofbane', price:780,
         reason:'En kunststofbane giver en ensartet spilleflade og kan bruges intensivt året rundt, uafhængigt af vejret.',
-        links:[L('Kunststofbaner', U.kunststof)]},
+        links:[lnk('Kunststofbaner', U.kunststof)]},
       {id:'graes', label:'Græs- og boldbane med magasin (Blue2Green)', price:420,
         reason:'Regnvandet opmagasineres under banen og gives tilbage til græsset i tørre perioder, så banen holder sig grøn uden kunstvanding. En bane på 8.000 m² kan rumme omkring 680 m³ vand.',
-        links:[L('Græs- og boldbaner', U.graes), L('Golpla græsarmering', U.golpla)]},
+        links:[lnk('Græs- og boldbaner', U.graes), lnk('Golpla græsarmering', U.golpla)]},
     ],
     defaultOption:a=> a.sporttype==='graes' ? 'graes' : 'kunststof',
   },
@@ -1005,7 +1008,7 @@ const STANDALONES = [
     recommendedWhen:a=>a.vanding==='kapillaer',
     addableHint:'Tilføj, hvis træerne skal have vand fra et magasin og ikke kun fra den regn, der falder.',
     fact:'Regnvandet samles, gemmes og gives tilbage til træet nedefra, uden pumper. Det holder træerne i vækst i tørre perioder og er især vigtigt de første år efter plantning.',
-    links:[L('Regnvandshåndtering med træer', U.regnvandtraeer), L('Iltning og vanding', U.vanding)],
+    links:[lnk('Regnvandshåndtering med træer', U.regnvandtraeer), lnk('Iltning og vanding', U.vanding)],
     calc:a=>({qty:getTreeQty(a), unit:'træ', price:3200}),
   },
   {
@@ -1014,7 +1017,7 @@ const STANDALONES = [
     recommendedWhen:a=>a.ledninger==='mange',
     addableHint:'Tilføj, hvis rødderne skal holdes væk fra ledninger eller fundamenter.',
     fact:'Nyplantede træer skal forankres, til rødderne har fået fat. Rodbarrierer styrer rødderne væk fra ledninger og fundamenter, hvor de ellers kan gøre skade.',
-    links:[L('Træforankring', U.forankring), L('Rodbarrierer', U.rodbarriere)],
+    links:[lnk('Træforankring', U.forankring), lnk('Rodbarrierer', U.rodbarriere)],
     calc:a=>({qty:getTreeQty(a), unit:'træ', price:1800}),
   },
   {
@@ -1025,7 +1028,7 @@ const STANDALONES = [
     hintFor:a=> a.challenges.has('skybrud') && ['lar','klimavej','klimavej-taet'].includes(regnvandOpt()) ? 'Den valgte regnvandsløsning har allerede et vandførende bærelag. Tilføj kun, hvis belægningen også skal skiftes.' : null,
     excludes:['forstaerkning'],
     fact:'En permeabel belægning lader regnvandet sive ned i bærelaget i stedet for at løbe til kloak. Permaweb fungerer som buffer under belægningen, og fordi der skal graves mindre ud, skånes eksisterende rødder.',
-    links:[L('Permeabelt bærelag', U.permeabel), L('Permaweb', U.permaweb)],
+    links:[lnk('Permeabelt bærelag', U.permeabel), lnk('Permaweb', U.permaweb)],
     calc:a=>({qty:a.area, unit:'m²', price:320}),
   },
   {
@@ -1035,7 +1038,7 @@ const STANDALONES = [
     excludes:['permeabel'],
     addableHint:'Tilføj, hvis den eksisterende asfalt kan forstærkes i stedet for at blive brudt op.',
     fact:'Når en slidt asfaltbelægning kan genbruges, kan en forstærkning forlænge levetiden uden at bryde det hele op. Det er ofte både hurtigere og billigere end en fuld udskiftning.',
-    links:[L('Forstærkning af asfalt', U.asfalt)],
+    links:[lnk('Forstærkning af asfalt', U.asfalt)],
     calc:a=>({qty:a.area, unit:'m²', price:260}),
   },
   {
@@ -1044,7 +1047,7 @@ const STANDALONES = [
     recommendedWhen:a=>a.challenges.has('forurening') || (a.afloeb==='separat' && a.traffic),
     addableHint:'Tilføj, hvis vand fra vej eller parkering skal renses, før det ledes videre eller nedsives.',
     fact:'Vejvand indeholder tungmetaller, olie og partikler fra dækslid. INNOLET® monteres i eksisterende vejbrønde og renser vandet, før det ledes videre, og D-Rainclean® filterjord renser i regnbede. Ved '+term('separat','separatkloak')+' er rensning særligt vigtig, fordi vandet ledes direkte ud i naturen.',
-    links:[L('Decentral rensning af vejvand', U.vejvand), L('D-Rainclean', U.drainclean)],
+    links:[lnk('Decentral rensning af vejvand', U.vejvand), lnk('D-Rainclean', U.drainclean)],
     calc:a=>({qty:a.area, unit:'m²', price:210}),
   },
   {
@@ -1053,7 +1056,7 @@ const STANDALONES = [
     recommendedWhen:a=>a.saltning==='ja',
     addableHint:'Tilføj, hvis arealet saltes om vinteren, så rødderne beskyttes mod saltskader.',
     fact:'Vejsalt giver svidningsskader på træer og planter, og saltværn beskytter ikke mod salttåge. PERLHUMUS® i vækstjorden binder saltenes metal-ioner og afbøder de høje saltkoncentrationer efter vintersaltning.',
-    links:[L('Salttolerante vækstmedier', U.salt)],
+    links:[lnk('Salttolerante vækstmedier', U.salt)],
     calc:a=>({qty:Math.max(1,Math.round(a.area*0.12)), unit:'m²', price:95}),
   },
   {
@@ -1062,7 +1065,7 @@ const STANDALONES = [
     recommendedWhen:a=>a.challenges.has('groent'),
     addableHint:'Tilføj, hvis I ønsker plantekummer, højbede eller træhulsriste i byrummet.',
     fact:'Plantekummer, højbedskanter, grønne øer og træhulsriste giver synligt grønt, skygge og bedre mikroklima, også hvor der ikke kan plantes direkte i jorden.',
-    links:[L('Byrumsinventar', U.byrum)],
+    links:[lnk('Byrumsinventar', U.byrum)],
     calc:a=>({qty:undefined, unit:'enhed', price:4200}),
     hasQty:true, defaultQty:a=>Math.max(1, Math.round(a.area/150)), qtyLabel:'antal enheder',
   },
