@@ -1994,8 +1994,17 @@ function hidePhotos(msg){
   document.getElementById('photos-head').hidden = true;
   wrap.hidden = false;
 }
+/* Skråfotoene placeres i øjeblikket forkert: udsnittet lander flere hundrede meter fra
+   adressen på de skrå billeder, mens et lodret billede (nadir) rammer rigtigt med samme
+   kode. Fejlen er hverken terrænkoten, rotationsmatricen eller udlæsningen af filen — de
+   er alle efterprøvet. Indtil den er fundet, vises billederne ikke: et billede af en
+   fremmed ejendom foran en kunde er værre end ingen billeder. Kortet ovenfor viser i
+   forvejen stedet ovenfra. Sæt til true igen, når placeringen er verificeret. */
+const SKRAAFOTO_KLAR = false;
+
 async function loadPhotos(){
   if(!state.location) return;
+  if(!SKRAAFOTO_KLAR){ document.getElementById('photos-wrap').hidden = true; state.photos = {}; return; }
   const job = ++MAPX.photoJob;
   const grid = document.getElementById('photo-grid');
   const wrap = document.getElementById('photos-wrap');

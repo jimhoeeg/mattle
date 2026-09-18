@@ -4,8 +4,5 @@
   "type": "module",
   "engines": {
     "node": ">=18"
-  },
-  "dependencies": {
-    "geotiff": "2.1.3"
   }
 }
