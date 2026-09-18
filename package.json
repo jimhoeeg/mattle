@@ -2,5 +2,10 @@
   "name": "mattle-loesningsbygger",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=18" }
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "geotiff": "2.1.3"
+  }
 }
