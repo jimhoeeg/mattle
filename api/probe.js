@@ -47,8 +47,10 @@ export default async function handler(req, res){
     for(let i=0;i<count;i++){ const im=await tiff.getImage(i); out.ifd_alle.push([im.getWidth(), im.getHeight()]); }
     out.sensor = item.properties['pers:interior_orientation'].sensor_array_dimensions;
 
-    const center=getImageXY(item,x,y,Z);
+    let center=getImageXY(item,x,y,Z);
+    if(req.query.px) center=[Number(req.query.px), Number(req.query.py)];
     out.center=[Math.round(center[0]),Math.round(center[1])];
+    out.beregnet=getImageXY(item,x,y,Z).map(Math.round);
     const outW=640,outH=440,aspect=outW/outH; const half=Number(req.query.half||450), hw=half*aspect, hh=half;
     let x0=Math.round(center[0]-hw), y0=Math.round(center[1]-hh), x1=Math.round(center[0]+hw), y1=Math.round(center[1]+hh);
     out.vindue_fuld=[x0,y0,x1,y1];
