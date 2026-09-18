@@ -2129,7 +2129,7 @@ function reportHtml(d){
   return '<header class="rep-head"><div><b>Mattle ApS</b><span>Projektrapport fra Løsningsbyggeren</span></div><span>'+d.date+'</span></header>' +
     '<h2 class="rep-title">'+esc(d.facts[0][1]!=='Ikke angivet' ? d.facts[0][1] : 'Dit projekt')+'</h2>' +
     '<section class="rep-sec"><h3>Projektet</h3><dl class="rep-dl">'+d.facts.map(function(f){return '<dt>'+f[0]+'</dt><dd>'+esc(f[1])+'</dd>';}).join('')+'</dl></section>' +
-    (photos.length ? '<section class="rep-sec"><h3>Området set fra luften</h3><div class="rep-photos">'+photos.map(function(x){ return '<figure><img src="'+d.photos[x.id]+'" alt="Skråfoto '+x.label.toLowerCase()+'"><figcaption>'+x.label+'</figcaption></figure>'; }).join('')+'</div><p class="rep-small">Skråfotos © Klimadatastyrelsen. Arealets placering i fotoet er omtrentlig.</p></section>' : '') +
+    (photos.length ? '<section class="rep-sec"><h3>Området set fra luften</h3><div class="rep-photos">'+photos.map(function(x){ return '<figure><img src="'+d.photos[x.id]+'" alt="Skråfoto '+x.label.toLowerCase()+'"><figcaption>'+x.label+'</figcaption></figure>'; }).join('')+'</div><p class="rep-small">Skråfotos © Klimadatastyrelsen. Arealet er indtegnet ud fra terrænhøjden på stedet.</p></section>' : '') +
     '<section class="rep-sec"><h3>Forholdene</h3><dl class="rep-dl">'+d.conditions.map(function(f){return '<dt>'+f[0]+'</dt><dd>'+esc(f[1])+'</dd>';}).join('')+'</dl></section>' +
     (d.tips.length ? '<section class="rep-sec"><h3>3 fagtips til dit projekt</h3>'+d.tips.map(function(t,i){ return '<div class="rep-tip"><b>'+(i+1)+'. '+t.h+'</b><p>'+t.p+'</p></div>'; }).join('')+'</section>' : '') +
     '<section class="rep-sec"><h3>Anbefalet løsning</h3>'+d.lines.map(function(l){
