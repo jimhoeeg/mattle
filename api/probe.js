@@ -58,20 +58,10 @@ export default async function handler(req, res){
     out.valgt_skala=scale; out.valgt_stoerrelse=[img.getWidth(),img.getHeight()];
     const win=[Math.floor(x0*scale),Math.floor(y0*scale),Math.ceil(x1*scale),Math.ceil(y1*scale)];
     out.vindue_i_oversigt=win;
-    const cw=160, ch=110;                      // lille udgave, så svaret kan sendes som tekst
+    const cw=Number(req.query.w||240), ch=Math.round(cw*440/640);
     const rgb=await img.readRGB({window:win,width:cw,height:ch,interleave:true});
     out.pixels=[cw,ch];
-    // returnér som grov ASCII-lysstyrke, så billedet kan efterses uden binære data
-    const lines=[]; const ramp=' .:-=+*#%@';
-    for(let row=0;row<ch;row+=3){
-      let s='';
-      for(let col=0;col<cw;col+=2){
-        const i=(row*cw+col)*3; const lum=(rgb[i]*0.3+rgb[i+1]*0.59+rgb[i+2]*0.11)/255;
-        s+=ramp[Math.min(9,Math.max(0,Math.round(lum*9)))];
-      }
-      lines.push(s);
-    }
-    out.ascii=lines;
+    out.rgb=Buffer.from(rgb.buffer||rgb).toString('base64');
   }catch(e){ out.fejl=String(e.message); }
   res.status(200).json(out);
 }
