@@ -49,7 +49,7 @@ export default async function handler(req, res){
 
     const center=getImageXY(item,x,y,Z);
     out.center=[Math.round(center[0]),Math.round(center[1])];
-    const outW=640,outH=440,aspect=outW/outH; const half=450, hw=half*aspect, hh=half;
+    const outW=640,outH=440,aspect=outW/outH; const half=Number(req.query.half||450), hw=half*aspect, hh=half;
     let x0=Math.round(center[0]-hw), y0=Math.round(center[1]-hh), x1=Math.round(center[0]+hw), y1=Math.round(center[1]+hh);
     out.vindue_fuld=[x0,y0,x1,y1];
     x0=Math.max(0,x0); y0=Math.max(0,y0); x1=Math.min(W,x1); y1=Math.min(H,y1);
