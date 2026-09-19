@@ -283,15 +283,15 @@
   .addr-chosen strong{ font-size:1.05rem; }
   #map{ height:clamp(320px,55vh,520px); border:1px solid var(--line); background:#DADCD6; max-width:none !important; }
   #map.drawing{ cursor:crosshair; }
-  .step > #map-ready, .step > #photos-wrap{ max-width:none; }
+  .step > #map-ready, .step > #skraafoto-wrap{ max-width:none; }
   .draw-bar{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin:12px 0 4px; }
   .draw-status{ font-size:.92rem; color:var(--ink); margin:6px 0 0; font-weight:600; }
-  .photo-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:12px; }
-  @media (max-width:640px){ .photo-grid{ grid-template-columns:1fr; } }
-  .photo{ margin:0; }
-  .photo-frame{ aspect-ratio:64/44; background:#E8E9E4; display:flex; align-items:center; justify-content:center; overflow:hidden; }
-  .photo-frame canvas{ width:100%; height:100%; object-fit:cover; display:block; }
-  .photo-msg{ font-size:.86rem; color:var(--ink-soft); padding:10px; text-align:center; }
+  .skraa-card{ margin-top:22px; border:1px solid var(--line); border-radius:8px; padding:16px 18px; background:var(--panel); }
+  .skraa-card h3{ margin:0 0 4px; }
+  .skraa-links{ display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+  .skraa-links a{ display:inline-block; border:1px solid var(--moss); border-radius:6px; padding:8px 14px;
+    font-size:.92rem; font-weight:600; color:var(--moss-deep); text-decoration:none; }
+  .skraa-links a:hover, .skraa-links a:focus{ background:var(--moss-pale); }
   .photo figcaption{ font-size:.86rem; font-weight:600; margin-top:5px; }
   .map-fallback{ border:1px solid var(--line); border-top:3px solid var(--moss); padding:18px 20px; max-width:640px; }
   /* Fagtips */
@@ -320,9 +320,6 @@
   .rep-sec h3{ font-size:1.15rem; border-bottom:1px solid #E2E2E2; padding-bottom:4px; color:#333; }
   .rep-dl{ display:grid; grid-template-columns:max-content 1fr; gap:4px 18px; margin:0; font-size:.92rem; }
   .rep-dl dt{ font-weight:700; } .rep-dl dd{ margin:0; }
-  .rep-photos{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-  .rep-photos figure{ margin:0; } .rep-photos img{ width:100%; display:block; }
-  .rep-photos figcaption{ font-size:.8rem; font-weight:600; }
   .rep-tip, .rep-line, .rep-k{ margin:0 0 10px; font-size:.9rem; }
   .rep-tip p, .rep-line p, .rep-k p{ margin:2px 0; line-height:1.55; }
   .rep-k h4{ margin:10px 0 2px; font-size:.98rem; }
@@ -446,13 +443,11 @@
         <button type="button" class="btn btn-outline" id="btn-redraw" onclick="redrawArea()" disabled>Tegn forfra</button>
       </div>
       <p class="draw-status" id="draw-status" aria-live="polite">Søg en adresse for at komme i gang.</p>
-      <div id="photos-wrap" hidden>
-        <div id="photos-head">
-          <h3 style="margin-top:28px;">Skråfotos af området</h3>
-          <p class="field-hint">Skråfotos viser facader, træer, terræn og adgangsforhold, som et luftfoto lige ovenfra skjuler. Arealet er indtegnet ud fra terrænhøjden på stedet.</p>
-        </div>
-        <p class="field-hint" id="photos-unavailable" hidden></p>
-        <div class="photo-grid" id="photo-grid"></div>
+      <div id="skraafoto-wrap" class="skraa-card" hidden>
+        <h3>Se stedet fra siden</h3>
+        <p class="field-hint" style="margin:0;">Skråfotos viser facader, træer, terræn og adgangsforhold, som et luftfoto lige ovenfra skjuler.
+          Klik en retning for at åbne Klimadatastyrelsens skråfotoviser på adressen i en ny fane.</p>
+        <div class="skraa-links" id="skraa-links"></div>
       </div>
     </div>
     <div id="map-unavailable" class="map-fallback" hidden>
@@ -1683,16 +1678,10 @@ const LIBS = {
   leafletCss:'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css',
   leaflet:'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js',
   proj4:'https://cdn.jsdelivr.net/npm/proj4@2.12.1/dist/proj4.js',
-  geotiff:'https://cdn.jsdelivr.net/npm/geotiff@2.1.3/dist-browser/geotiff.js',
 };
-const DIRECTIONS = [
-  {id:'north', label:'Set mod nord'}, {id:'east', label:'Set mod øst'},
-  {id:'south', label:'Set mod syd'}, {id:'west', label:'Set mod vest'},
-];
 const MAPX = {checked:false, available:false, leads:false, terrain:false, map:null, layer:null, line:null, poly:null, marker:null,
-  drawing:false, pts:[], photoJob:0};
+  drawing:false, pts:[]};
 state.location = null;   // {address, lat, lon, x, y, polygon:[[lat,lon]], areaDrawn}
-state.photos = {};       // {north:dataURL, ...}
 
 function loadScript(src){ return new Promise(function(res, rej){ const s=document.createElement('script'); const to=setTimeout(function(){ rej(new Error('timeout')); }, 15000); s.src=src; s.onload=function(){ clearTimeout(to); res(); }; s.onerror=function(e){ clearTimeout(to); rej(e); }; document.head.appendChild(s); }); }
 function loadCss(href){ const l=document.createElement('link'); l.rel='stylesheet'; l.href=href; document.head.appendChild(l); }
@@ -1702,7 +1691,7 @@ async function checkConfig(){
   MAPX.checked = true;
   try{
     const r = await fetch('/api/config', {cache:'no-store'});
-    if(r.ok){ const c = await r.json(); MAPX.available = !!c.maps; MAPX.leads = !!c.leads; MAPX.terrain = !!c.terrain; }
+    if(r.ok){ const c = await r.json(); MAPX.available = !!c.maps; MAPX.leads = !!c.leads; }
   }catch(e){ MAPX.available = false; }
   applyLeadMode();
 }
@@ -1799,12 +1788,10 @@ function clearSearch(){
 }
 function changeAddress(){
   forgetDrawnArea();
-  state.location = null; state.photos = {};
+  state.location = null;
   clearDrawing();
   if(MAPX.marker){ MAPX.marker.remove(); MAPX.marker = null; }
-  MAPX.photoJob++;                               // stop billeder, der stadig er undervejs
-  document.getElementById('photos-wrap').hidden = true;
-  document.getElementById('photo-grid').innerHTML = '';
+  updateSkraafotoLinks();
   document.getElementById('addr-chosen').hidden = true;
   document.getElementById('addr-search').hidden = false;
   setDrawStatus('Søg en adresse for at komme i gang.');
@@ -1881,7 +1868,7 @@ function pickAddress(res){
   MAPX.marker = L.circleMarker([res.lat, res.lon], {radius:6, color:'#fff', weight:2, fillColor:'#2A8BC4', fillOpacity:1}).addTo(MAPX.map);
   clearDrawing(); startDrawing();
   track('mattle_location_selected', {});
-  loadPhotos();
+  updateSkraafotoLinks();
 }
 
 /* ---- indtegning ---- */
@@ -1930,7 +1917,7 @@ function finishDrawing(){
   setDrawStatus('Arealet er tegnet: '+area.toLocaleString('da-DK')+' m². Du kan justere tallet senere.');
   track('mattle_area_drawn', {area_bucket: area<500?'<500':area<2000?'500-2000':'>2000'});
   updateDrawButtons();
-  loadPhotos();
+  updateSkraafotoLinks();
 }
 function drawPolygon(pts){
   removeSketch();
@@ -1959,134 +1946,34 @@ function updateDrawButtons(){
   document.getElementById('btn-redraw').disabled = !has;
 }
 
-/* ---- skråfotos ---- */
-function getImageXY(item, X, Y, Z){
-  const P = item.properties, io = P['pers:interior_orientation'];
-  const xx0=io.principal_point_offset[0], yy0=io.principal_point_offset[1], ci=io.focal_length, pix=io.pixel_spacing[0];
-  const dimXi=io.sensor_array_dimensions[0], dimYi=io.sensor_array_dimensions[1];
-  const X0=P['pers:perspective_center'][0], Y0=P['pers:perspective_center'][1], Z0=P['pers:perspective_center'][2];
-  const r = function(d){ return d*Math.PI/180; };
-  const o=r(P['pers:omega']), p=r(P['pers:phi']), k=r(P['pers:kappa']);
-  const c=-ci, dimX=-(dimXi*pix/2), dimY=-(dimYi*pix/2);
-  const D11=Math.cos(p)*Math.cos(k), D12=-Math.cos(p)*Math.sin(k), D13=Math.sin(p);
-  const D21=Math.cos(o)*Math.sin(k)+Math.sin(o)*Math.sin(p)*Math.cos(k), D22=Math.cos(o)*Math.cos(k)-Math.sin(o)*Math.sin(p)*Math.sin(k), D23=-Math.sin(o)*Math.cos(p);
-  const D31=Math.sin(o)*Math.sin(k)-Math.cos(o)*Math.sin(p)*Math.cos(k), D32=Math.sin(o)*Math.cos(k)+Math.cos(o)*Math.sin(p)*Math.sin(k), D33=Math.cos(o)*Math.cos(p);
-  const den = D13*(X-X0)+D23*(Y-Y0)+D33*(Z-Z0);
-  const xd = -c*((D11*(X-X0)+D21*(Y-Y0)+D31*(Z-Z0))/den);
-  const yd = -c*((D12*(X-X0)+D22*(Y-Y0)+D32*(Z-Z0))/den);
-  return [((xd-xx0)+dimX)*-1/pix, ((yd-yy0)+dimY)*-1/pix];
+/* ---- skråfotos ----
+   Skråfotoene vises ikke længere i løsningsbyggeren selv. At placere et punkt rigtigt i
+   et skråfoto kræver fotogrammetri, som gav forkerte udsnit hos os, og et billede af en
+   fremmed ejendom foran en kunde er værre end intet billede. I stedet linkes der til
+   Klimadatastyrelsens egen skråfotoviser, som er kilden til billederne og altid placerer
+   rigtigt. Koordinaterne er EPSG:25832, som viseren selv bruger. */
+const SKRAAFOTO_VIEWER = 'https://skraafoto.dataforsyningen.dk/viewer.html';
+const SKRAA_RETNINGER = [
+  {id:'north', label:'Mod nord'}, {id:'east', label:'Mod øst'},
+  {id:'south', label:'Mod syd'}, {id:'west', label:'Mod vest'},
+];
+function skraafotoUrl(loc, retning){
+  return SKRAAFOTO_VIEWER + '?orientation=' + retning
+    + '&center=' + loc.x.toFixed(2) + ',' + loc.y.toFixed(2);
 }
-/* Terrænkoten i punktet. Uden den kan et skråfoto ikke placeres rigtigt, jf. /api/kote. */
-async function fetchKote(loc){
-  if(!MAPX.terrain) return null;
-  try{
-    const r = await fetch('/api/kote?x='+loc.x.toFixed(2)+'&y='+loc.y.toFixed(2));
-    if(!r.ok) return null;
-    const d = await r.json();
-    return typeof d.kote === 'number' && isFinite(d.kote) ? d.kote : null;
-  }catch(e){ return null; }
-}
-function hidePhotos(msg){
-  const wrap = document.getElementById('photos-wrap');
-  document.getElementById('photo-grid').innerHTML = '';
-  document.getElementById('photos-unavailable').textContent = msg;
-  document.getElementById('photos-unavailable').hidden = false;
-  document.getElementById('photos-head').hidden = true;
-  wrap.hidden = false;
-}
-/* Skråfotoene placeres i øjeblikket forkert: udsnittet lander flere hundrede meter fra
-   adressen på de skrå billeder, mens et lodret billede (nadir) rammer rigtigt med samme
-   kode. Fejlen er hverken terrænkoten, rotationsmatricen eller udlæsningen af filen — de
-   er alle efterprøvet. Indtil den er fundet, vises billederne ikke: et billede af en
-   fremmed ejendom foran en kunde er værre end ingen billeder. Kortet ovenfor viser i
-   forvejen stedet ovenfra. Sæt til true igen, når placeringen er verificeret. */
-const SKRAAFOTO_KLAR = false;
-
-async function loadPhotos(){
-  if(!state.location) return;
-  if(!SKRAAFOTO_KLAR){ document.getElementById('photos-wrap').hidden = true; state.photos = {}; return; }
-  const job = ++MAPX.photoJob;
-  const grid = document.getElementById('photo-grid');
-  const wrap = document.getElementById('photos-wrap');
-  state.photos = {};
-
+function updateSkraafotoLinks(){
+  const wrap = document.getElementById('skraafoto-wrap');
+  const row = document.getElementById('skraa-links');
+  if(!state.location){ wrap.hidden = true; row.innerHTML = ''; return; }
   const loc = state.location;
-  const kote = await fetchKote(loc);
-  if(job!==MAPX.photoJob) return;
-  if(kote === null){
-    // Hellere ingen skråfotos end skråfotos af naboens grund.
-    hidePhotos('Skråfotos vises ikke, fordi terrænhøjden på stedet ikke kan hentes lige nu. Uden den ville billederne vise et punkt ved siden af arealet.');
-    return;
-  }
-  document.getElementById('photos-unavailable').hidden = true;
-  document.getElementById('photos-head').hidden = false;
+  row.innerHTML = SKRAA_RETNINGER.map(function(d){
+    return '<a href="'+esc(skraafotoUrl(loc, d.id))+'" target="_blank" rel="noopener"'
+      + ' data-skraa="'+d.id+'">'+d.label+'</a>';
+  }).join('') + '<a href="'+esc(skraafotoUrl(loc, 'map'))+'" target="_blank" rel="noopener" data-skraa="map">Kortvisning</a>';
+  row.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){ track('mattle_skraafoto_open', {direction:a.dataset.skraa}); });
+  });
   wrap.hidden = false;
-  grid.innerHTML = DIRECTIONS.map(function(d){
-    return '<figure class="photo" id="photo-'+d.id+'"><div class="photo-frame"><span class="photo-msg">Henter skråfoto…</span></div><figcaption>'+d.label+'</figcaption></figure>';
-  }).join('');
-  if(typeof GeoTIFF==='undefined'){
-    try{ await loadScript(LIBS.geotiff); }catch(e){ grid.querySelectorAll('.photo-msg').forEach(function(m){ m.textContent='Skråfotos kunne ikke indlæses'; }); return; }
-  }
-  if(job!==MAPX.photoJob) return;
-  await Promise.all(DIRECTIONS.map(async function(d){
-    const fig = document.getElementById('photo-'+d.id);
-    try{
-      const r = await fetch('/api/skraafoto?x='+loc.x.toFixed(2)+'&y='+loc.y.toFixed(2)+'&direction='+d.id);
-      const item = await r.json();
-      if(job!==MAPX.photoJob) return;
-      if(!r.ok || !item || !item.href){ fig.querySelector('.photo-msg').textContent = 'Intet skråfoto fundet her'; return; }
-      const url = await renderPhoto(item, loc, fig, kote);
-      if(job!==MAPX.photoJob) return;
-      state.photos[d.id] = url;
-      const yr = item.datetime ? new Date(item.datetime).getFullYear() : '';
-      fig.querySelector('figcaption').textContent = d.label + (yr?' · '+yr:'');
-    }catch(e){
-      if(job===MAPX.photoJob) fig.querySelector('.photo-msg').textContent = 'Skråfotoet kunne ikke hentes';
-    }
-  }));
-}
-async function renderPhoto(item, loc, fig, kote){
-  const tiff = await GeoTIFF.fromUrl(item.href);
-  const full = await tiff.getImage(0);
-  const W = full.getWidth(), H = full.getHeight();
-  const Z = kote;  // terrænkote i DVR90; afgørende for at ramme det rigtige sted
-  const center = getImageXY(item, loc.x, loc.y, Z);
-  let pts = null, half = 450;
-  if(loc.polygon){
-    pts = loc.polygon.map(function(ll){ const u = toUTM(ll[0], ll[1]); return getImageXY(item, u[0], u[1], Z); });
-    const xs = pts.map(function(p){return p[0];}), ys = pts.map(function(p){return p[1];});
-    half = Math.max(350, (Math.max.apply(null,xs)-Math.min.apply(null,xs))*0.9, (Math.max.apply(null,ys)-Math.min.apply(null,ys))*0.9);
-  }
-  const outW = 640, outH = 440, aspect = outW/outH;
-  let hw = half*aspect, hh = half;
-  let x0 = Math.round(center[0]-hw), y0 = Math.round(center[1]-hh), x1 = Math.round(center[0]+hw), y1 = Math.round(center[1]+hh);
-  if(x1<0 || y1<0 || x0>W || y0>H) throw new Error('outside');
-  x0=Math.max(0,x0); y0=Math.max(0,y0); x1=Math.min(W,x1); y1=Math.min(H,y1);
-  // vælg den mindste oversigt, der stadig giver fuld opløsning i udsnittet
-  const count = await tiff.getImageCount();
-  let img = full, scale = 1;
-  for(let i=count-1;i>=1;i--){
-    const ov = await tiff.getImage(i); const s = ov.getWidth()/W;
-    if((x1-x0)*s >= outW*0.9){ img = ov; scale = s; break; }
-  }
-  const win = [Math.floor(x0*scale), Math.floor(y0*scale), Math.ceil(x1*scale), Math.ceil(y1*scale)];
-  const cw = Math.round(outW*(x1-x0)/(2*hw)), ch = Math.round(outH*(y1-y0)/(2*hh));
-  const rgb = await img.readRGB({window:win, width:cw, height:ch, interleave:true});
-  const canvas = document.createElement('canvas'); canvas.width = cw; canvas.height = ch;
-  const ctx = canvas.getContext('2d'), data = ctx.createImageData(cw, ch);
-  for(let i=0, j=0; i<rgb.length; i+=3, j+=4){ data.data[j]=rgb[i]; data.data[j+1]=rgb[i+1]; data.data[j+2]=rgb[i+2]; data.data[j+3]=255; }
-  ctx.putImageData(data, 0, 0);
-  const tx = function(p){ return [(p[0]-x0)*cw/(x1-x0), (p[1]-y0)*ch/(y1-y0)]; };
-  if(pts){
-    ctx.beginPath(); pts.map(tx).forEach(function(p,i){ i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]); }); ctx.closePath();
-    ctx.fillStyle='rgba(134,188,63,.22)'; ctx.fill(); ctx.lineWidth=3; ctx.strokeStyle='#86BC3F'; ctx.setLineDash([8,6]); ctx.stroke();
-  } else {
-    const c = tx(center); ctx.beginPath(); ctx.arc(c[0], c[1], 8, 0, Math.PI*2); ctx.fillStyle='#2A8BC4'; ctx.fill(); ctx.lineWidth=3; ctx.strokeStyle='#fff'; ctx.stroke();
-  }
-  const frame = fig.querySelector('.photo-frame'); frame.innerHTML = '';
-  canvas.setAttribute('role','img'); canvas.setAttribute('aria-label', fig.querySelector('figcaption').textContent+' over projektområdet');
-  frame.appendChild(canvas);
-  return canvas.toDataURL('image/jpeg', 0.82);
 }
 function skipPlacering(){ track('mattle_location_skipped', {}); goTo('terrain'); }
 
@@ -2113,7 +2000,7 @@ function buildReportData(){
   const lo = lines.reduce(function(s,l){return s+l.lo;},0), hi = lines.reduce(function(s,l){return s+l.hi;},0);
   return {
     date: new Date().toLocaleDateString('da-DK'),
-    location: state.location, photos: state.photos,
+    location: state.location,
     facts: [
       ['Adresse', state.location && state.location.address ? state.location.address : 'Ikke angivet'],
       ['Areal', a.area.toLocaleString('da-DK')+' m²'+(state.location && state.location.areaDrawn ? ' (indtegnet på kort)' : '')],
@@ -2134,11 +2021,11 @@ function buildReportData(){
   };
 }
 function reportHtml(d){
-  const photos = DIRECTIONS.filter(function(x){ return d.photos[x.id]; });
+
   return '<header class="rep-head"><div><b>Mattle ApS</b><span>Projektrapport fra Løsningsbyggeren</span></div><span>'+d.date+'</span></header>' +
     '<h2 class="rep-title">'+esc(d.facts[0][1]!=='Ikke angivet' ? d.facts[0][1] : 'Dit projekt')+'</h2>' +
     '<section class="rep-sec"><h3>Projektet</h3><dl class="rep-dl">'+d.facts.map(function(f){return '<dt>'+f[0]+'</dt><dd>'+esc(f[1])+'</dd>';}).join('')+'</dl></section>' +
-    (photos.length ? '<section class="rep-sec"><h3>Området set fra luften</h3><div class="rep-photos">'+photos.map(function(x){ return '<figure><img src="'+d.photos[x.id]+'" alt="Skråfoto '+x.label.toLowerCase()+'"><figcaption>'+x.label+'</figcaption></figure>'; }).join('')+'</div><p class="rep-small">Skråfotos © Klimadatastyrelsen. Arealet er indtegnet ud fra terrænhøjden på stedet.</p></section>' : '') +
+    (state.location ? '<section class="rep-sec"><h3>Se stedet fra siden</h3><p class="rep-small">Skråfotos af adressen kan ses i Klimadatastyrelsens skråfotoviser: <a href="'+esc(skraafotoUrl(state.location,'north'))+'">'+esc(skraafotoUrl(state.location,'north'))+'</a></p></section>' : '') +
     '<section class="rep-sec"><h3>Forholdene</h3><dl class="rep-dl">'+d.conditions.map(function(f){return '<dt>'+f[0]+'</dt><dd>'+esc(f[1])+'</dd>';}).join('')+'</dl></section>' +
     (d.tips.length ? '<section class="rep-sec"><h3>3 fagtips til dit projekt</h3>'+d.tips.map(function(t,i){ return '<div class="rep-tip"><b>'+(i+1)+'. '+t.h+'</b><p>'+t.p+'</p></div>'; }).join('')+'</section>' : '') +
     '<section class="rep-sec"><h3>Anbefalet løsning</h3>'+d.lines.map(function(l){
@@ -2161,10 +2048,9 @@ function renderDashboard(){
 }
 function renderReportPreview(){
   const d = buildReportData();
-  const photos = Object.keys(d.photos).length;
   document.getElementById('report-contents').innerHTML = [
     ['Projektets forhold', d.conditions.length+' forhold om jord, vand og trafik'],
-    ['Skråfotos', photos ? photos+' skråfotos af området' : 'Tilføjes, når arealet er placeret på kortet'],
+    ['Skråfotos', state.location ? 'Kan ses hos Klimadatastyrelsen, link i rapporten' : 'Tilføjes, når arealet er placeret på kortet'],
     ['Anbefalet løsning', d.lines.length+' komponenter med begrundelser og links'],
     ['3 fagtips', 'Det, du skal være opmærksom på for at lykkes'],
     ['Prisoverslag', 'Spænd pr. komponent og samlet'],
